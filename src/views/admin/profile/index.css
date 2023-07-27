@@ -1,0 +1,78 @@
+@import url('../../../../assets/css/globalStyle.css');
+
+.background-modal{
+    display: none;
+}
+#profile-form{
+    gap: 15px;
+}
+.profile-content-top{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-content-top img{
+    width: 100px;
+    height: 100px;
+}
+.profile-content-top div{
+    display: flex;
+    align-items: center;
+}
+.profile-content-top div span:nth-child(2){
+    background-image: url("../../../../assets/imgs/icons/edit_FILL0_wght300_GRAD0_opsz24.svg"); 
+    background-repeat: no-repeat; 
+    background-position: center center;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+}
+
+.profile-content-body{
+    display: flex;
+    flex-direction: column;    
+}
+
+.span-email, .span-password{
+    font-family:var(--font-title);    
+}
+
+.span-email, .span-password {
+cursor: pointer;
+}
+
+div label {    
+    font-family:'Quicksand';
+}
+
+.span-password label{
+    font-family:var(--font-title);
+}
+
+.span-password input{
+    margin: 0px;
+}
+
+
+.profile-content-body span{
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+
+#exit-button{  
+   display: flex; 
+   align-items: center;
+   gap: 5px;
+   
+}
+
+form img {    
+    border: none;
+    margin-bottom: 0px;    
+  }
+
+  footer .container div, a {
+    font-weight: normal;
+  }

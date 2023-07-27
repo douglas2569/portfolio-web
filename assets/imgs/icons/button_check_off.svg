@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="40.0px"
+   height="40.0px"
+   viewBox="0 0 40.0 40.0"
+   version="1.1"
+   id="SVGRoot"
+   sodipodi:docname="button_check_off.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview13417"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="true"
+     inkscape:zoom="3.684568"
+     inkscape:cx="-3.7996314"
+     inkscape:cy="23.340593"
+     inkscape:window-width="1366"
+     inkscape:window-height="697"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid15133" />
+  </sodipodi:namedview>
+  <defs
+     id="defs13412" />
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#a8a8a8;fill-opacity:1;stroke-width:18.8976;stroke-linecap:round;stroke-miterlimit:100"
+       id="rect5392"
+       width="40"
+       height="40"
+       x="0"
+       y="0"
+       ry="10" />
+    <path
+       d="m 12.99995,26.932625 h 1.236526 l 9.259673,-9.25965 -1.236525,-1.23655 -9.259674,9.259675 z m 13.7038,-10.34425 -3.374926,-3.344175 1.31345,-1.31345 Q 25.073049,11.5 25.703799,11.5 q 0.63075,0 1.0615,0.43075 l 1.236526,1.236525 q 0.430774,0.43075 0.44615,1.046125 0.01537,0.615375 -0.415375,1.046125 z M 12.403825,28.4326 q -0.386525,0 -0.645175,-0.258675 Q 11.5,27.915275 11.5,27.52875 v -2.094175 q 0,-0.180775 0.06537,-0.344225 0.06538,-0.163475 0.205775,-0.30385 L 22.244221,14.3134 25.61917,17.68835 15.146071,28.161425 q -0.140375,0.1404 -0.303826,0.205775 -0.163474,0.0654 -0.344249,0.0654 z m 10.46925,-11.3827 -0.61345,-0.613475 1.236525,1.23655 z"
+       id="path1838"
+       style="fill:#fffdf7;fill-opacity:1;stroke-width:0.025" />
+  </g>
+</svg>

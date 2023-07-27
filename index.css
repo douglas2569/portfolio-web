@@ -1,0 +1,187 @@
+@import url("./assets/css/globalStyle.css"); 
+
+@font-face {
+    font-family: 'Poppins-SemiBold';
+    src: url("./assets/fonts/Poppins-SemiBold.ttf");
+  
+
+}
+
+/* header{
+    margin-bottom: 48px;
+    position: fixed;
+} */
+
+.background-modal{
+    display: none;  
+    z-index: 0;
+}
+
+div.background-modal .container{          
+    flex-direction: row;
+    justify-content: center;     
+}
+
+ul.breadcrumb{
+    display: none;
+}
+
+main .container, .container-header{
+    gap:10px;
+}    
+
+main .container-header{
+    display: flex;    
+    justify-content: space-between;      
+    flex-direction: column;   
+}
+
+main .container-header #categories-title{
+  font-family: 'Poppins-SemiBold';
+  font-size: var(--titles); 
+}
+
+.banner img{
+    width: 111%;
+    margin-left: -20px; 
+}
+.things-list .figure .figcaption .thing-header span:nth-child(1){
+    display: none;
+}
+main .container-header .filter-struct{
+    display: flex;
+    justify-content: space-between;
+}
+
+main .container-header .filter-struct #filter-struct-title{
+    font-family: 'Poppins-SemiBold';
+    font-size: var(--titles); 
+}
+
+main div.container-header div.filter-things{
+    display: flex;     
+    gap: 8px;
+    background-color: #7E7E7E;
+    padding: 3px;     
+    border-radius: 15px;
+    
+    
+}
+.filter-things span{
+    padding: 0px 8px; 
+    cursor: pointer;
+    font-weight: 600;   
+    font-size: 14px;    
+    height: 25px;
+    line-height: 22px;
+}
+
+.filter-things span[status="1"]{
+    background-color: var(--background-color); 
+    border-radius: 15px;  
+    color:  var(--gray-color);       
+}
+
+.filter-things span[status="0"]{
+    background-color: var(--gray-color);
+    border-radius: 15px;  
+    color: var(--background-color);    
+}
+   
+.categories-panel{    
+    background-color: var(--background-color); 
+    border-radius: 5px;
+    width: var(--containers-width);
+       
+}
+
+.categories-panel ul{
+    display: flex;
+    gap: 3.33px;    
+    text-align: center;  
+    justify-content: space-between;
+}
+
+.categories-panel ul li{
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 4px;   
+}
+
+.categories-panel ul li span{
+    font-size: 12px;
+    /* font-weight: 600px; */
+}
+
+.categories-panel ul li a{
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+    
+}
+
+.categories-panel ul li a span.material-symbols-rounded{
+    font-size: 35px;
+}
+
+.categories-panel ul li.active a[data-name='Eletrônicos']{
+    background-color: #0F8B8D;            
+}
+
+.categories-panel ul li.active a[data-name='Garrafas']{
+    background-color: #CA5D22;            
+}
+
+.categories-panel ul li.active a[data-name='Guarda-chuvas']{
+    background-color: #7C18C9;            
+}
+
+.categories-panel ul .active a[data-name='Eletrônicos']~span{
+    color: #0F8B8D;            
+}
+
+.categories-panel ul .active a[data-name='Garrafas']~span{
+    color: #CA5D22;            
+}
+
+.categories-panel ul .active a[data-name='Guarda-chuvas']~span{
+    color: #7C18C9;            
+}
+
+
+.categories-list a{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5); 
+} 
+
+.categories-list a span.material-symbols-rounded{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+
+/* panel modal categories*/
+
+ul.categories-list-panel li a {
+    display: inline-block;
+    width: 100%;
+    height: 40px;
+    cursor: pointer;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+    margin-top: 15px;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: 500;
+    font-weight: bold;
+} 
+
+.categories-panel-modal{
+    display: none;
+}
+
+/*      responsiveness        */
+

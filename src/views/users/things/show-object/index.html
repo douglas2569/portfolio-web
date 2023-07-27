@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+    <link rel="stylesheet" href="index.css">
+
+    <title>Objeto</title>
+</head>
+<body class="body">  
+    <div class="background-modal">        
+        <div class="container">           
+            
+                <div id="qrcode-modal">
+                    <p> Um QR Code foi gerado e enviado para o seu e-mail. Por favor, mostre-o quando for à secretaria buscar seu objeto.
+                    </p>                   
+
+                    <button id="confirm-screen-qrcode-button">OK</button>
+                </div>
+
+        </div>     
+        
+
+    </div>
+
+    <div class="background-modal" id="loading-modal-background">        
+        <div class="container">   
+            <div id="loading-modal">
+                <p> Processando ...</p>                                          
+            </div>
+        </div> 
+    </div>
+
+    <header>
+        <div class="container"> </div>
+    </header>
+
+    <main>
+        <div class="container">    
+            <form id='first-form' action="" method="post">                        
+                <input type="hidden" name="id" id="data-id">                         
+                <input type = "hidden" name="image_address" id="image-address">                        
+                <img > 
+                <div>
+                    <label for="code"><h1>Categoria </h1></label>                    
+                    <label id="code"></label>  
+                </div>
+                <input type='text' id="category" disabled />
+                
+                <input type = "hidden" name="category_id" id="category-id">
+
+                <label for="description"><h1>Descrição</h1></label>
+                <textarea name="description" cols="30" rows="10" id="description" disabled></textarea>
+                
+
+                <label for="local"><h1>Local perdido</h1></label>
+                <input type="text" name="local" id="local" disabled>
+                                   
+                
+                <label for="local"><h1>Horario cadastrado</h1></label>
+                <input type="text" name="date" id="date" disabled>
+                                   
+                
+                <input type = "hidden" name="returned_status" id="returned-status">                         
+
+                <button id="its-my-button">É meu</button>                        
+            </form>
+
+            <div id="send-email-modal">               
+               <form id='email-form' >                
+                    <label for="email">Insira seu nome*</label>
+                    <input type="text" name="name" id="name" required placeholder="Nome"/>                               
+                
+                    <label for="email">Insira seu email*</label>
+                    <input type="email" name="to" id="to" required placeholder="Email" />
+                            
+                <input type="hidden" name="subject" id="subject" value="Achai - Objeto Reservado">                  
+                 
+                 
+                 <button id="send-email-button"> Reservar</button>
+               </form> 
+            </div> 
+                                  
+        </div>
+
+    </main>         
+    
+    <script type = "module" src="index.js" ></script>
+    <script type = "module" src="../../../../../assets/js/utilities.js"></script>    
+</body>
+</html>

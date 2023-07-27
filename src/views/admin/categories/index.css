@@ -1,0 +1,87 @@
+@import url('../../../../assets/css/globalStyle.css');
+
+.background-modal{
+    display: none;
+}
+.categories-list{
+    height: 100vh;
+}
+.categories-list .tbody .tr{        
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  
+    gap: 5px;           
+}
+
+.tbody{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.categories-list .tbody .td:nth-child(1){
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);  
+    width: 100%;
+    
+}
+.categories-list .tbody .td{
+    border: 0px solid #6d6868; 
+    padding: 5px;
+    border-radius:10px;
+    display: flex;
+    gap: 5px;
+    
+}
+
+input[value]{
+    border: none;
+    outline: none;
+    
+}
+
+.category-name{
+    height: 30px;
+    width: 100%;
+    border: none;
+}
+
+.categories-list .tbody .td img:nth-child(1){
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    
+}
+
+#register-categories-button{
+    margin-top: 15px;  
+    margin-bottom: 15px;  
+    padding: 7px;     
+    align-self: self-start;
+}
+
+.categories-list .tbody .td img.delete-button{
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.5);
+}
+
+.categories-list .tbody .td span:nth-child(2){
+    display: flex;
+    flex-direction: center;
+
+}
+
+.success-message{
+    background-color: rgb(75, 161, 75);
+    padding: 10px;
+    color: rgb(233, 238, 241);
+    margin-top: 20px;
+    border-radius: 4px;
+    display: none;
+}
+
+.fail-message{
+    background-color: rgb(181, 3, 3);
+    padding: 10px;
+    color: rgb(233, 238, 241);
+    margin-top: 20px;
+    border-radius: 4px;
+    display: none;
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class = "restricted-admin">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> 
+    <link rel="stylesheet" href="index.css">
+
+    <title></title>
+</head>
+<body class="body"> 
+    <div class="background-modal">        
+        <div class="container"></div>        
+    </div>
+     
+    <header>
+        <div class="container"> </div>
+    </header>
+
+    <main>
+        <div class="container">    
+            <form id='first-form' action="" method="post">                        
+                <input type="hidden" name="id" id="data-id">                         
+                <input type = "hidden" name="image_address" id="image-address">                        
+                <img id="img"> 
+                <div>
+                    <label id="labelCategory">Categoria </label>
+                    <label id="code"></label>               
+                    
+                </div>
+                <div class ="category" >
+                    <input type='text' id="category" disabled />
+                </div>
+                <input type = "hidden" name="category_id" id="category-id">
+                                        
+                <label id="labelDescription">Descrição</label>
+                <div class="description">
+                    <textarea name="description" cols="30" rows="10" id="description" disabled></textarea>
+                </div>                
+
+                <label id="labelLocal">Local perdido</label>
+                <div class="local">                    
+                    <input type="text" name="local" id="local" disabled>
+                </div>                                   
+                
+                <label id="labelDate">Horario cadastrado</label>
+                <div class="date">
+                    <input type="text" name="date" id="date" disabled>
+                </div>
+                                  
+                
+                <input type = "hidden" name="returned_status" id="returned-status">   
+                <input type = "hidden" name="reserved_status" id="reserved-status">    
+                
+                <button id="return-button" >Confir. retirada</button>
+                                   
+            </form> 
+            
+        </div>
+    </main>
+    <footer>
+        <div class="container"></div>
+    </footer>
+        
+    <script type = "module" src="index.js" ></script>
+    <script type = "module" src="../../../../../assets/js/utilities.js"></script>
+</body>
+</html>

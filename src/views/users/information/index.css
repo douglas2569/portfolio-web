@@ -1,0 +1,44 @@
+@import url("../../../../assets/css/globalStyle.css");
+ button{    
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: 0;
+
+ }
+
+ .header-accordion{
+  display: flex;
+  justify-content: space-between;  
+ }
+
+
+ div.container div.accordion{
+    background-color: var(--background-color); 
+    width: 100%;    
+    border-bottom: 1px var(--font-color) solid;
+    color: var(--font-color); 
+    margin-bottom: 10px;
+    font-size: var(--h2-titles);    
+   
+  }
+ 
+  .container div.accordion p{
+    font-weight: 600;
+  }
+  .container div.accordion .header-accordion p:nth-child(1){
+    margin-bottom: 10px;    
+    
+  } 
+   
+  .panel-accordion{ 
+    padding: 10px;
+    background-color:  #F1F1F1; 
+    border-radius: 10px;
+    overflow: hidden;       
+    display: none;
+    transition: 0.4s;
+    margin-bottom: 10px;
+    
+  } 
+
+  

@@ -1,0 +1,71 @@
+@import url("../../../../../assets/css/globalStyle.css");
+
+form#first-form div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;    
+}
+
+
+form#first-form div #code{
+    font-weight: 700;
+    font-size: 12px;
+    color:var(--gray-color);
+    font-family: "Quicksand";
+}
+
+form#email-form span{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+form#email-form input[type='email']{
+    margin-bottom: 5px
+}
+
+#send-email-modal{
+    display:none;           
+}
+div.background-modal{
+    padding: 20px
+}
+.background-modal{
+    display: none;
+}
+
+ #qrcode-modal, #loading-modal{  
+    display: flex;     
+    justify-content: center;
+    background-color: var(--background-color);
+    align-self: center;    
+    flex-direction: column;    
+    align-items: center;
+    height: 177px;
+    padding: 15px;
+    border-radius: 10px;
+    gap: 10px;    
+    font-weight: 600;
+    font-size: 18px;
+}
+
+
+textarea#message-body{
+    display:none;
+}
+
+form input, form textarea, form select{
+    border-radius: 10px;
+    padding: 10px 10px;      
+    border: 1px var(--gray-color) solid;
+    background-color: var(--background-color);
+    box-shadow:none;
+  }
+
+  #send-email-button{
+    margin-top: 15px;
+}
+
+#loading-modal-background{
+    display: none;
+}

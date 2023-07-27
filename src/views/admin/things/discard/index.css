@@ -1,0 +1,26 @@
+@import url('../../../../../assets/css/globalStyle.css');
+
+.background-modal{
+    display: none;
+}
+
+.things-list figure{
+    cursor: auto;
+}
+
+.files-zip-button{
+    align-self: self-start;   
+}
+
+.files-zip-list div{
+    display: flex;
+    justify-content: space-between;
+}
+
+#delete-button{
+    cursor: pointer;
+}
+
+.things-list{
+    margin-top: 10px;
+}

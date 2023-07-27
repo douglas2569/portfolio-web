@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class = "restricted-admin">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" /> 
+    <link rel="stylesheet" href="index.css">
+
+    <title>Editar objetos</title>
+</head>
+<body class="body"> 
+    <div class="background-modal">        
+        <div class="container">
+            <div id="img-register-modal">
+                
+                <img id="exit-modal-button" src="../../../../../assets/imgs/icons/close_FILL0_wght300_GRAD0_opsz24.svg" alt="Fechar">
+
+                <div id="open-picture-modal">                    
+                    <img  src="../../../../../assets/imgs/icons/photo_camera_FILL0_wght300_GRAD0_opsz24.svg" alt="Tirar foto">                    
+                    <p>Tirar foto</p>
+                </div>
+
+                <label for="image-address-update">
+                    <img  src="../../../../../assets/imgs/icons/filter_FILL0_wght300_GRAD0_opsz24.svg" alt="Escolher imagem existente">                                       
+                    <p id="choose-picture-button">Escolher existente</p>                           
+                </label>          
+                
+            </div>
+
+            <div class="cam-modal">                
+                <video autoplay></video>
+                <div>
+                    <button id="take-picture-button"><span></span></span>Tirar Foto</button>
+                </div>
+            </div>
+
+        </div>        
+        
+    </div>
+    
+    <header>
+        <div class="container"></div>        
+    </header>
+
+    <main>
+        
+        <div class="container"> 
+            <form id="form">                        
+                <input type="hidden" name="id" id="data-id"> 
+                <img id="img-picture"/> 
+                <canvas></canvas>  
+                <input type = "file" name="image_address_update" id="image-address-update">  
+                <input type = "hidden" name="image_address" id="image-address">                               
+                <div>
+                    <label id="labelCategories">Categorias*</label>
+                    <label id="code"></label>
+                </div>
+                
+                <div class="categories">
+                    <select name="category_id" id="list-categories"></select>                
+                </div>                
+                
+                <label for="local">Local*</label>
+                <input type="text" name="local" id="local">
+                               
+
+                <label for="description">Descrição</label>
+                <textarea name="description" cols="30" rows="10" id="description"></textarea>
+                           
+                                
+                <input type="hidden" name="returned_status" id="returned-status" >
+                <input type="hidden" name="reserved_status" id="reserved-status" >  
+                <span class="buttons-container">
+                    <button id="return-button" >Conf. retirada</button>
+                    <button id="update-button" disabled >Atualizar</button>
+                </span>
+                
+                
+            </form>            
+        </div>
+    </main>    
+
+    <footer>
+        <div class="container"></div>
+    </footer>
+        
+    <script type = "module" src="index.js" ></script>
+    <script type = "module" src="../../../../../assets/js/utilities.js"></script>
+</body>
+</html>

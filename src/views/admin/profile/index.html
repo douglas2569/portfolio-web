@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head class = "restricted-admin">
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="stylesheet" type="text/css" href="index.css" />   
+    
+    <title>Perfil</title>
+</head>
+
+<body class="body">  
+    <div class="background-modal">        
+        <div class="container"></div>        
+    </div>  
+    <header>
+        <div class="container"></div>
+    </header>
+    
+    <main>        
+        <div class="container">
+            <form method="post" id="profile-form">
+                <div class="profile-content-top">
+                    <img src="../../../../assets/imgs/icons/account_circle_FILL1_wght300_GRAD0_opsz40.svg" alt="Administrador">
+                    <div>
+                        <span>Administrador</span>
+                        <!-- <span></span> -->
+                    </div>
+                </div>
+
+                <div class="profile-content-body">                    
+                    <label for="email" class="span-email">E-mail</label>
+                    <span>
+                        <label class="label-email"></label>
+                        <input type="text" name="email" id="email" placeholder="Alterar Email" clicked="no">   
+                    </span> 
+                    <span>
+                        <label for="password"  class="span-password">Senha</label>                                         
+                        <input type="password" name="password" id="password" placeholder="Alterar Senha" clicked="no">
+                    </span>                       
+                </div>  
+
+                <div class="profile-content-footer">
+                    <div id="exit-button">
+                        <img alt="botão sair">
+                        <span>Sair</span>
+                    </div>
+                </div>
+
+            </form>  
+        </div>         
+        
+    </main>
+
+    <footer>
+        <div class="container"></div>
+    </footer>
+        
+    <script type="module" src="index.js" ></script>
+    <script type="module" src="../../../../assets/js/utilities.js"></script>
+</body>
+</html>
