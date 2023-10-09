@@ -2,6 +2,7 @@
 namespace core;
 
 use \src\Config;
+use DateTimeZone;
 
 class Controller {
     public $array = [
@@ -9,10 +10,16 @@ class Controller {
         'result' => []
     ];
 
+    protected DateTimeZone $UTCTimeZone;
+    protected DateTimeZone $timeZone;
+
     public function __construct(){
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Content-Type: application/json");
+
+        $this->UTCTimeZone =   new DateTimeZone("UTC");
+        $this->timeZone =  new DateTimeZone('America/Fortaleza');
     }
     
     protected function redirect($url) {

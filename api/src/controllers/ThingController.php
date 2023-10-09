@@ -7,17 +7,15 @@ use \src\models\Zips;
 use \src\services\AuthService;
 use Exception;
 use DateTime;
-use DateTimeZone;
 use ZipArchive;
 
 
 class ThingController extends Controller {    
     private $numberDays;
-    private DateTimeZone $timezone;
+
     public function __construct(){        
         parent::__construct();                       
-        $this->numberDays = 15768000; // 6 meses
-        $this->timezone =  new DateTimeZone('America/Fortaleza');
+        $this->numberDays = 15768000; // 6 meses        
     }
 
     public function index() {
@@ -626,7 +624,8 @@ class ThingController extends Controller {
 
     private function checkDateDifference($date, $daysLimit){        
         $dateThing = new DateTime($date);
-        $now = new DateTime('now', $this->timezone);                               
+        $now = new DateTime('now', $this->UTCTimeZone);                               
+        $now->setTimezone($this->timeZone);                              
         $diffDates =  $now->format('U') - $dateThing->format('U');        
         return ($diffDates >= $daysLimit);
     }
@@ -666,7 +665,8 @@ class ThingController extends Controller {
     
 
     private function compressDescardedImages($pathZip ='', $fileImages=array(), $deleleOriginal = false ){
-        $dateNow = new DateTime('now', $this->timezone);                               
+        $dateNow = new DateTime('now', $this->UTCTimeZone); 
+        $dateNow->setTimezone($this->timeZone);                              
         $dateNow =  $dateNow->format('d.m.y.h.i');
 
         $zip = new ZipArchive();

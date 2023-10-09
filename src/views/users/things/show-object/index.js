@@ -125,14 +125,14 @@ class ShowThing extends Controller{
             
             let response = await this.modelEmail.sendVerificationEmail(formDataEmail); 
 
+            document.querySelector('#loading-modal-background').style.display = 'block'; 
+
             if(!response.error === ''){
                 alert("Falha no envio do email contate Athur Lorenço SMD 2022.1 diurno");
                 return;
             } 
+            document.querySelector('#loading-modal-background').style.display = 'none';             
             
-            /*
-                falta criar a modal send-verification-email-modal
-            */
             document.querySelector('#send-verification-email-modal').style.display = 'block';
             document.querySelector('#send-verification-email-button').addEventListener('click', async()=>{
                 e.preventDefault();

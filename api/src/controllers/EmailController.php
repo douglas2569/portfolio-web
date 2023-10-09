@@ -1,14 +1,15 @@
 <?php
 namespace src\controllers;
 use \core\Controller;
+use \src\models\ReservationControl;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use chillerlan\QRCode\{QRCode, QROptions};
+use DateTime;
 
 require '../vendor/autoload.php';
-
 
 class EmailController extends Controller{ 
 
@@ -98,12 +99,14 @@ class EmailController extends Controller{
         exit;
     }
 
-    public function sendVerificationEmail(){        
-        
+    public function sendVerificationEmail(){   
+       
         $userEmail = filter_input(INPUT_POST, 'useremail', FILTER_VALIDATE_EMAIL, FILTER_SANITIZE_EMAIL);
         $code = rand(1000,9999);
         $msg = "Expira em 5 minutos.";
         $subject = "Verificação de email";
+        $dateNow = new DateTime('now', $this->UTCTimeZone); 
+        $dateNow->setTimezone($this->timeZone); 
 
         if($userEmail){
             try {                                   
@@ -112,7 +115,16 @@ class EmailController extends Controller{
                $this->mail->Subject = $subject;
                $this->mail->Body = " Codigo de validação: <br> <h1>$code</h1> $msg";
                $this->mail->send();                 
-               $this->array['result'] = 'E-mail enviado com sucesso';               
+               $this->array['result'] = 'E-mail enviado com sucesso';  
+               
+               ReservationControls::insert(
+                [   
+                    'email' => $userEmail,
+                    'code'=>$code,
+                    'date'=>$dateNow
+                ]
+                )->execute()
+               
 
            } catch (Exception $e) {
                $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
