@@ -24,7 +24,7 @@ form#email-form input[type='email']{
     margin-bottom: 5px
 }
 
-#send-email-modal{
+#send-email-modal, #send-verification-email-modal{
     display:none;           
 }
 div.background-modal{
@@ -62,7 +62,7 @@ form input, form textarea, form select{
     box-shadow:none;
   }
 
-  #send-email-button{
+  #reserve-button{
     margin-top: 15px;
 }
 

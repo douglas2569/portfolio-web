@@ -5,7 +5,7 @@ let ssl = false;
 // ssl = true;
 
 const config =  {
-    urlBase:(ssl)?`https://${host}/achai`:`http://${host}/achai`,        
+    urlBase:(ssl)?`https://${host}/project-achai`:`http://${host}/project-achai`,        
     
 }
 

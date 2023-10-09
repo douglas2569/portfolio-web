@@ -90,7 +90,7 @@ class ShowThing extends Controller{
         });
     }
     async sendEmail(){                
-        document.querySelector("#send-email-button").addEventListener("click",async (e)=>{    
+        document.querySelector("#reserve-object-button").addEventListener("click",async (e)=>{    
             e.preventDefault();                 
             this.unDisabled();           
 
@@ -109,20 +109,7 @@ class ShowThing extends Controller{
                 alert('Insira o email');            
                 form.to.focus();
                 return; 
-            } 
-
-            // if((/[^a-zA-Z]/.test(`${form.to.value}`))){
-            //     alert('Nome invalido'); 
-            //     return;
-            // }
-
-            
-            // if(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g.test(`${form.name.value}`)){
-                
-            //     alert('Endereço de email invalido'); 
-            //     return;
-            // }
-                        
+            }                         
 
             let formDataEmail = new FormData(); 
 
@@ -134,29 +121,47 @@ class ShowThing extends Controller{
             formDataEmail.append('subject', document.querySelector('#email-form #subject').value);            
             formDataEmail.append('path', `${config.urlBase}/src/views/admin/things/thingreserved/?id=${formData.get('id')}`);            
             
-            document.querySelector('#send-email-modal').style.display = 'none'; 
-                       
+            document.querySelector('#send-email-modal').style.display = 'none';
             
-            
-            document.querySelector('#loading-modal-background').style.display = 'block';  
-            let response = await this.modelEmail.sendEmail(formDataEmail);                    
+            let response = await this.modelEmail.sendVerificationEmail(formDataEmail); 
 
-           if(response.error === ''){            
-                await this.modelThings.reserve('', formData, 'Reservado'); 
-                document.querySelector('#loading-modal-background').style.display = 'none';
-                document.querySelector('.background-modal').style.display = 'block';                               
-                
-           }else{
-                document.querySelector('#loading-modal-background').style.display = 'none';
-                if(alert(response.error) == undefined){
-                    window.location.reload(`${config.urlBase}`);
-                }
-           }          
+            if(!response.error === ''){
+                alert("Falha no envio do email contate Athur Lorenço SMD 2022.1 diurno");
+                return;
+            } 
+            
+            /*
+                falta criar a modal send-verification-email-modal
+            */
+            document.querySelector('#send-verification-email-modal').style.display = 'block';
+            document.querySelector('#send-verification-email-button').addEventListener('click', async()=>{
+                e.preventDefault();
+
+                formDataEmail.append('validationCode', document.querySelector('#send-verification-email-form #code').value); 
+
+                response = await this.modelEmail.sendQRCodeEmail(formDataEmail);                    
+                document.querySelector('#loading-modal-background').style.display = 'block';  
+                if(response.error === ''){            
+                        await this.modelThings.reserve('', formData, 'Reservado'); 
+                        document.querySelector('#loading-modal-background').style.display = 'none';
+                        document.querySelector('.background-modal').style.display = 'block';                               
+                        
+                }else{
+                        document.querySelector('#loading-modal-background').style.display = 'none';
+                        if(alert(response.error) == undefined){
+                            window.location.reload(`${config.urlBase}`);
+                        }
+                }             
+
+            });
+
+            
+                    
                       
 
         });
 
-    }    
+    }   
 
     
 
