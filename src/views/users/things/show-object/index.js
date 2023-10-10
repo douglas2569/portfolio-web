@@ -89,11 +89,12 @@ class ShowThing extends Controller{
             item.removeAttribute('disabled');
         });
     }
+
     async sendEmail(){                
         document.querySelector("#reserve-object-button").addEventListener("click",async (e)=>{    
             e.preventDefault();                 
-            this.unDisabled();           
-
+            this.unDisabled();          
+            
            let formData = new FormData(document.querySelector('#first-form'));
                      
            formData.set('reserved_status',1);            
@@ -111,7 +112,32 @@ class ShowThing extends Controller{
                 return; 
             }                         
 
+            let formDataEmail = new FormData();
+            formDataEmail.append('useremail', document.querySelector('#email-form #to').value);                   
+            
+            document.querySelector('#send-email-modal').style.display = 'none';
+            
+            document.querySelector('#loading-modal-background').style.display = 'block'; 
+            let response = await this.modelEmail.sendVerificationEmail(formDataEmail); 
+            
+            if(!response.error === ''){
+                alert("Falha no envio do email contate Arthur Lorenço SMD 2022.1 diurno");
+                return;
+            } 
+            document.querySelector('#loading-modal-background').style.display = 'none';             
+            
+            document.querySelector('#send-verification-code-modal').style.display = 'block';
+            
+
+        });
+
+    }   
+
+    handleSendVerificationCodeButton(){
+        document.querySelector('#send-verification-code-button').addEventListener('click', async(e)=>{
+            e.preventDefault();   
             let formDataEmail = new FormData(); 
+            let formData = new FormData(document.querySelector('#first-form'));
 
             formDataEmail.append('id', formData.get('id'));
             formDataEmail.append('local', formData.get('local'));            
@@ -119,51 +145,27 @@ class ShowThing extends Controller{
             formDataEmail.append('username', document.querySelector('#email-form #name').value);
             formDataEmail.append('useremail', document.querySelector('#email-form #to').value);
             formDataEmail.append('subject', document.querySelector('#email-form #subject').value);            
-            formDataEmail.append('path', `${config.urlBase}/src/views/admin/things/thingreserved/?id=${formData.get('id')}`);            
+            formDataEmail.append('path', `${config.urlBase}/src/views/admin/things/thingreserved/?id=${formData.get('id')}`);                         
+            formDataEmail.append('validationCode', document.querySelector('#send-verification-code-form #code').value);  
+
+            document.querySelector('#loading-modal-background').style.display = 'block';  
+            let responseValidationCode = await this.modelEmail.sendQRCodeEmail(formDataEmail);
             
-            document.querySelector('#send-email-modal').style.display = 'none';
-            
-            document.querySelector('#loading-modal-background').style.display = 'block'; 
-
-            let response = await this.modelEmail.sendVerificationEmail(formDataEmail); 
-
-            if(!response.error === ''){
-                alert("Falha no envio do email contate Athur Lorenço SMD 2022.1 diurno");
-                return;
-            } 
-            document.querySelector('#loading-modal-background').style.display = 'none';             
-            
-            document.querySelector('#send-verification-code-modal').style.display = 'block';
-            document.querySelector('#send-verification-code-button').addEventListener('click', async()=>{
-                e.preventDefault();
-
-                formDataEmail.append('validationCode', document.querySelector('#send-verification-email-form #code').value);                
-                
-                response = await this.modelEmail.sendQRCodeEmail(formDataEmail);                    
-                document.querySelector('#loading-modal-background').style.display = 'block';  
-                if(response.error === ''){            
-                        await this.modelThings.reserve('', formData, 'Reservado'); 
-                        document.querySelector('#loading-modal-background').style.display = 'none';
-                        document.querySelector('.background-modal').style.display = 'block';                               
-                        
-                }else{
-                        document.querySelector('#loading-modal-background').style.display = 'none';
-                        if(alert(response.error) == undefined){
-                            window.location.reload(`${config.urlBase}`);
-                        }
-                }             
-
-            });
-
-            
+            if(!responseValidationCode.error === ''){            
+                let response = await this.modelThings.reserve('', formData, 'Reservado'); 
+                document.querySelector('#loading-modal-background').style.display = 'none';                
+                alert(response.result);  
+                window.location.href = config.urlBase;
                     
-                      
+            }else{
+                    document.querySelector('#loading-modal-background').style.display = 'none';
+                    if(responseValidationCode.error == undefined){
+                        window.location.reload(`${config.urlBase}`);
+                    }
+            }             
 
         });
-
-    }   
-
-    
+    }
 
     confirmScreenQrcodeButton(){
          document.querySelector('#confirm-screen-qrcode-button').addEventListener('click', ()=>{
@@ -206,3 +208,4 @@ showThing.confirmScreenQrcodeButton();
 showThing.createHeaderContent();
 showThing.createBreadcrumbs();
 showThing.handleButtonInfo();
+showThing.handleSendVerificationCodeButton();

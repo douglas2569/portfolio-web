@@ -62,7 +62,7 @@ form input, form textarea, form select{
     box-shadow:none;
   }
 
-  #reserve-button{
+  #reserve-button, #reserve-object-button{
     margin-top: 15px;
 }
 

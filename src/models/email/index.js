@@ -7,14 +7,15 @@ export default class ModelEmail extends Model{
   
 
  async sendQRCodeEmail(formData){
-    const endpoint = `${this.path}${this.nameController}/sendqrcodeemail`;                        
+    const endpoint = `${this.path}${this.nameController}/sendqrcodeemail`;   
+    
       try {
         let response = await fetch(endpoint, {
           method: "POST",            
           body:  formData          
         });  
         
-        response = await response.json();        
+        response = await response.json();            
         return response;                 
         
       } catch (error) {
@@ -24,6 +25,7 @@ export default class ModelEmail extends Model{
      
 
   async sendVerificationEmail(formData){
+    
     const endpoint = `${this.path}${this.nameController}/sendverificationemail`;                        
       try {
         let response = await fetch(endpoint, {

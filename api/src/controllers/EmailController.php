@@ -34,6 +34,7 @@ class EmailController extends Controller{
     }
         
     public function sendQRCodeEmail(){
+       
         $id = filter_input(INPUT_POST, 'id');        
         $adminEmail = 'equipeanti404@gmail.com';
         $local = filter_input(INPUT_POST, 'local');
@@ -43,7 +44,10 @@ class EmailController extends Controller{
         $subject = filter_input(INPUT_POST, 'subject');        
         $path = filter_input(INPUT_POST, 'path');        
         $validationCode = filter_input(INPUT_POST, 'validationCode');        
-               
+        
+        //echo json_encode("$adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode");       
+        
+
         $options = new QROptions([
             'version'      => 10,
             'outputType'   => QRCode::OUTPUT_IMAGE_JPG,
@@ -51,65 +55,60 @@ class EmailController extends Controller{
             'scale'        => 5,
             'imageBase64'  => false
         ]);
+
+        // echo $adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode; 
         
         if($adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode){
             // verificar se o code realmente existe e do banco e esta atrelado aquele email.
             //verificar se o codigo existe
             //verificar sem esse email ultrapasou 3 reservas em 24hrs
-            // O codigo e valido por 5 min
+            // O codigo e valido por 5 min             
 
-            try { 
+            $code = ListValidationCodes::select()->where('code',$validationCode)->get();
+            
+            // echo $this->checkDateDifference($code[0]['create_at'], 900); exit;
 
-                $code = ListValidationCodes::select()->where('code',$validationCode)->get();                 
-                if(count($code) <= 0 &&
-                 !$this->checkDateDifference($code[0]['create_at'], 300) //300s = 5min
-                ){                   
+            if(count($code) > 0 /*&&
+                !$this->checkDateDifference($code[0]['create_at'], 900)*/ //300s = 5min
+            ){                  
+                                
+
+                try {
+
+                    $this->mail->addAddress("{$adminEmail}");                                      
+                    $this->mail->addAddress("{$userEmail}");                                      
+                                                    
+                    $nameImg = md5(time().rand(0,99));
                     
-                    EmailList::insert(
-                        [                     
-                            'addr'=>$userEmail
-                        ]
-                        )->execute();
+                    (new QRcode($options))->render($path,'../assets/imgs/'.$nameImg.'.jpg');   
+                    $this->mail->addAttachment('../assets/imgs/'.$nameImg.'.jpg','QRCodeObjetoPerdido.jpeg');                                                                                              
+
+                    $this->mail->Body = "<p>
+                                        Código:". $id." <br>
+                                        Local:".$local." <br>
+                                        Descrição:".$description."<br>                                                                                                                                        
+                                </p>";
+                                
+                    $this->mail->Subject = $subject;
+                    $this->mail->AltBody = 'O objeto de código '.$id.' foi encontrado no(a) '.$local.'. Descrição: '.$description;
                     
+                    
+                    $this->mail->send();                 
+                    $this->array['result'] = 'E-mail enviado com sucesso';
+                    unlink('../assets/imgs/'.$nameImg.'.jpg'); 
+
+
                     $this->array['result'] = 'Reservado com sucesso'; 
+                    EmailList::insert(['addr'=>$userEmail])->execute();
 
-                }else { 
-                    
-                    $this->array['error'] = "Codigo invalido"; 
-                    
+                } catch (Exception $e) {
+                    $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
                 }
 
- 
-            } catch (Exception $e) {
-                $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
-            }
-
-             try { 
-
-                $this->mail->addAddress("{$adminEmail}");                                      
-                $this->mail->addAddress("{$userEmail}");                                      
-                                                  
-                $nameImg = md5(time().rand(0,99));
+            }else { 
                 
-                (new QRcode($options))->render($path,'../assets/imgs/'.$nameImg.'.jpg');   
-                $this->mail->addAttachment('../assets/imgs/'.$nameImg.'.jpg','QRCodeObjetoPerdido.jpeg');                                                                                              
-
-                $this->mail->Body = "<p>
-                                    Código:". $id." <br>
-                                    Local:".$local." <br>
-                                    Descrição:".$description."<br>                                                                                                                                        
-                            </p>";
-                            
-                $this->mail->Subject = $subject;
-                $this->mail->AltBody = 'O objeto de código '.$id.' foi encontrado no(a) '.$local.'. Descrição: '.$description;
+                $this->array['error'] = "Codigo invalido"; 
                 
-                
-                $this->mail->send();                 
-                $this->array['result'] = 'E-mail enviado com sucesso';
-                unlink('../assets/imgs/'.$nameImg.'.jpg'); 
-
-            } catch (Exception $e) {
-                $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
             }
             
 
@@ -163,9 +162,11 @@ class EmailController extends Controller{
     private function checkDateDifference($date, $daysLimit){        
         $dateThing = new DateTime($date);
         $now = new DateTime('now', $this->UTCTimeZone);                               
-        $now->setTimezone($this->timeZone);                              
+        $now->setTimezone($this->timeZone);                                      
         $diffDates =  $now->format('U') - $dateThing->format('U');        
         return ($diffDates >= $daysLimit);
+        // return $diffDates;
+        // return $now->format('U');
     }
     
    
