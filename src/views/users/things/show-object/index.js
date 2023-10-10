@@ -15,7 +15,7 @@ class ShowThing extends Controller{
         this.modelThings = new  ModelThings();
         this.modelEmail = new  ModelEmail();
         this.identifier = this.retrieveURLId(); 
-        this.currentPage = this.retrieveURLCurrentPage();                    
+        this.currentPage = this.retrieveURLCurrentPage();                   
 
     }   
 
