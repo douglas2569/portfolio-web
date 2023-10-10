@@ -2,6 +2,6 @@
 namespace src\models;
 use \core\Model;
 
-class ReservationControls extends Model { 
+class EmailList extends Model { 
 
 }

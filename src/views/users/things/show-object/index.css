@@ -24,7 +24,7 @@ form#email-form input[type='email']{
     margin-bottom: 5px
 }
 
-#send-email-modal, #send-verification-email-modal{
+#send-email-modal, #send-verification-code-modal{
     display:none;           
 }
 div.background-modal{

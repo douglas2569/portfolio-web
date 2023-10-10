@@ -123,9 +123,9 @@ class ShowThing extends Controller{
             
             document.querySelector('#send-email-modal').style.display = 'none';
             
-            let response = await this.modelEmail.sendVerificationEmail(formDataEmail); 
-
             document.querySelector('#loading-modal-background').style.display = 'block'; 
+
+            let response = await this.modelEmail.sendVerificationEmail(formDataEmail); 
 
             if(!response.error === ''){
                 alert("Falha no envio do email contate Athur Lorenço SMD 2022.1 diurno");
@@ -133,12 +133,12 @@ class ShowThing extends Controller{
             } 
             document.querySelector('#loading-modal-background').style.display = 'none';             
             
-            document.querySelector('#send-verification-email-modal').style.display = 'block';
-            document.querySelector('#send-verification-email-button').addEventListener('click', async()=>{
+            document.querySelector('#send-verification-code-modal').style.display = 'block';
+            document.querySelector('#send-verification-code-button').addEventListener('click', async()=>{
                 e.preventDefault();
 
-                formDataEmail.append('validationCode', document.querySelector('#send-verification-email-form #code').value); 
-
+                formDataEmail.append('validationCode', document.querySelector('#send-verification-email-form #code').value);                
+                
                 response = await this.modelEmail.sendQRCodeEmail(formDataEmail);                    
                 document.querySelector('#loading-modal-background').style.display = 'block';  
                 if(response.error === ''){            
