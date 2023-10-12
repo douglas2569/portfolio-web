@@ -138,6 +138,7 @@ class ShowThing extends Controller{
             e.preventDefault();   
             let formDataEmail = new FormData(); 
             let formData = new FormData(document.querySelector('#first-form'));
+            formData.set('reserved_status',1); 
 
             formDataEmail.append('id', formData.get('id'));
             formDataEmail.append('local', formData.get('local'));            
@@ -147,14 +148,14 @@ class ShowThing extends Controller{
             formDataEmail.append('subject', document.querySelector('#email-form #subject').value);            
             formDataEmail.append('path', `${config.urlBase}/src/views/admin/things/thingreserved/?id=${formData.get('id')}`);                         
             formDataEmail.append('validationCode', document.querySelector('#send-verification-code-form #code').value);  
+            formDataEmail.append('reserved_status', 1);                         
 
             document.querySelector('#loading-modal-background').style.display = 'block';  
             let responseValidationCode = await this.modelEmail.sendQRCodeEmail(formDataEmail);
             
-            if(!responseValidationCode.error === ''){            
-                let response = await this.modelThings.reserve('', formData, 'Reservado'); 
-                document.querySelector('#loading-modal-background').style.display = 'none';                
-                alert(response.result);  
+            if(responseValidationCode.error === ''){            
+                await this.modelThings.reserve('', formData, 'Reservado'); 
+                document.querySelector('#loading-modal-background').style.display = 'none';                                
                 window.location.href = config.urlBase;
                     
             }else{
