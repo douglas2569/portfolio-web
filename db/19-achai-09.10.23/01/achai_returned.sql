@@ -27,7 +27,7 @@ CREATE TABLE `returned` (
   `date` datetime NOT NULL,
   `thing_id` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb3;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

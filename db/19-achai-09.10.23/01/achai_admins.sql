@@ -29,7 +29,7 @@ CREATE TABLE `admins` (
   `email` varchar(320) DEFAULT NULL,
   `hash` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb3;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

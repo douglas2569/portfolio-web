@@ -27,7 +27,7 @@ CREATE TABLE `categories` (
   `name` varchar(50) DEFAULT NULL,
   `icon_name` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=112 DEFAULT CHARSET=utf8mb3;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

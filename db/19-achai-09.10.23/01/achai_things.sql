@@ -32,7 +32,7 @@ CREATE TABLE `things` (
   `category_id` int NOT NULL DEFAULT '0',
   `image_address` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=247 DEFAULT CHARSET=utf8mb3;
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
