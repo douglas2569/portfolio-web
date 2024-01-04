@@ -121,6 +121,7 @@ CREATE TRIGGER `after_trings_update_reserved_filed` AFTER UPDATE ON `things` FOR
 END
 $$
 DELIMITER ;
+
 DELIMITER $$
 CREATE TRIGGER `after_trings_update_returned_filed` AFTER UPDATE ON `things` FOR EACH ROW BEGIN
     IF NEW.returned_status = 1 AND OLD.returned_status = 0 THEN

@@ -137,7 +137,6 @@ class ThingController extends Controller {
     
     }
 
-
     public function getAllByDescription($description=[]){
         $things = [];
         

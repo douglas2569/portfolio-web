@@ -10,7 +10,7 @@ use chillerlan\QRCode\{QRCode, QROptions};
 use DateTime;
 
 require '../vendor/autoload.php';
-// fazer uma store procedure pois estou executando dois comando do banco, fazendo duas requições
+
 class EmailController extends Controller{ 
     private $mail = null;
     public function __construct(){
@@ -53,24 +53,18 @@ class EmailController extends Controller{
             'imageBase64'  => false
         ]);
 
-        // echo $adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode; 
         
         if($adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode){
-            // verificar se o code realmente existe e do banco e esta atrelado aquele email.
-            //verificar se o codigo existe
-            //verificar sem esse email ultrapasou 3 reservas em 24hrs
-            // O codigo e valido por 5 min             
-
-            $code = ListValidationCodes::select()->where('code',$validationCode)->get();
+            
+            $code = ListValidationCodes::select()
+                                        ->where('code',$validationCode)
+                                        ->where('thing_id',$id)
+                                        ->get();
             $resultsetEmail = EmailList::select()->where('addr',$userEmail)->get();            
            
-            // echo $this->checkDateDifference($code[0]['create_at'], 900); exit;
+           
 
-            if(count($code) > 0  
-                    
-            /*&&
-                !$this->checkDateDifference($code[0]['create_at'], 900)*/ //300s = 5min
-            ){  
+            if(count($code) > 0 ){  
                 $this->mail->addAddress("{$adminEmail}");                                      
                 $this->mail->addAddress("{$userEmail}");                                      
                                                 
@@ -148,6 +142,8 @@ class EmailController extends Controller{
     public function sendVerificationEmail(){  
     
         $userEmail = filter_input(INPUT_POST, 'useremail', FILTER_VALIDATE_EMAIL, FILTER_SANITIZE_EMAIL);
+        $thingId = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT, FILTER_SANITIZE_NUMBER_INT);
+
         $code = rand(1000,9999);
         $msg = "Expira em 5 minutos.";
         $subject = "Verificação de email";
@@ -162,7 +158,8 @@ class EmailController extends Controller{
                 
                ListValidationCodes::insert(
                 [                     
-                    'code'=>$code
+                    'code'=>$code,
+                    'thing_id'=>$thingId
                 ]
                 )->execute();
                 
@@ -189,8 +186,6 @@ class EmailController extends Controller{
         $now->setTimezone($this->timeZone);                                      
         $diffDates =  $now->format('U') - $dateThing->format('U');        
         return ($diffDates >= $daysLimit);
-        // return $diffDates;
-        // return $now->format('U');
     }
     
    
