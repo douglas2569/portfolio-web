@@ -154,14 +154,9 @@ class EmailController extends Controller{
                $this->mail->addAddress("{$userEmail}");
                $this->mail->Subject = $subject;
                $this->mail->Body = " Codigo de validação: <br> <h1>$code</h1> $msg";
-               $this->mail->send();
-                
-               ListValidationCodes::insert(
-                [                     
-                    'code'=>$code,
-                    'thing_id'=>$thingId
-                ]
-                )->execute();
+               $this->mail->send();           
+
+                ListValidationCodes::insertSP($code, $thingId);
                 
                 $this->array['result'] = 'E-mail de validação enviado com sucesso'; 
 

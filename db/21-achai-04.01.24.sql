@@ -76,7 +76,7 @@ CREATE TABLE `reserved` (
   `date` datetime NOT NULL,
   `thing_id` INT NOT NULL,
   
-  FOREIGN KEY('thing_id') REFERENCES 'things'('id')
+  FOREIGN KEY(`thing_id`) REFERENCES `things`(`id`)
 );
 
 -- --------------------------------------------------------
@@ -93,7 +93,7 @@ CREATE TABLE `returned` (
   `thing_id` INT NOT NULL,
   
   PRIMARY KEY (`id`),
-  FOREIGN KEY('thing_id') REFERENCES 'things'('id')
+  FOREIGN KEY(`thing_id`) REFERENCES `things`(`id`)
 
 );
 
@@ -116,7 +116,7 @@ CREATE TABLE `things` (
   `category_id` int NOT NULL DEFAULT '0',
   `image_address` varchar(64) NOT NULL,
 
-  FOREIGN KEY('category_id') REFERENCES 'categories'('id')
+  FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`)
   
 );
 
@@ -160,7 +160,10 @@ DROP TABLE IF EXISTS `listvalidationcodes`;
 CREATE TABLE `listvalidationcodes` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `code` int NOT NULL,
-  `create_at` datetime DEFAULT CURRENT_TIMESTAMP
+  `create_at` INT DEFAULT TIME_TO_SEC(CURRENT_TIMESTAMP),
+  
+  `thing_id` INT NOT NULL,
+  FOREIGN KEY(`thing_id`) REFERENCES `things`(`id`)
 );
 
 --
@@ -186,17 +189,42 @@ END
 $$
 DELIMITER ;
 
----
-/*  criar um trigger que apague todos registros com data < 5 min, delete from data < 5min
-DELIMITER $$
-CREATE TRIGGER `after_email_inserted` AFTER UPDATE ON `listvalidationcodes` FOR EACH ROW BEGIN
-    IF NEW.returned_status = 1 AND OLD.returned_status = 0 THEN
-        INSERT INTO returned
-		SET date = NOW(), thing_id = OLD.id;
-    END IF;
-END
-$$
-DELIMITER ;
-*/
 -- --------------------------------------------------------
+
+DROP PROCEDURE IF EXISTS sp_register_listvalidationcodes;
+DELIMITER $$
+
+CREATE PROCEDURE sp_register_listvalidationcodes(	  
+    code_p INT,
+    thing_id_p INT
+  )
+
+BEGIN    
+    
+    DECLARE track_no VARCHAR(10) DEFAULT '0/0';
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
+    
+    BEGIN    
+        GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
+        SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+        SELECT track_no, @full_error;
+
+        ROLLBACK;    
+    END;
+
+    START TRANSACTION;
+        SET track_no = '1/2';
+        INSERT INTO listvalidationcodes (code, thing_id) values(code_p, thing_id_p);
+
+        SET track_no = '2/2'; 
+        DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300;        
+                
+        SET track_no = '0/2';
+        SET @full_error = 'successfully executed.';
+        SELECT track_no, @full_error;
+    COMMIT;
+
+END; $$
+
+DELIMITER ;
 
