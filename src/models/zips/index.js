@@ -4,6 +4,4 @@ export default class Zips extends Model{
     constructor() {
         super('zip');
      }
-
-
 }
