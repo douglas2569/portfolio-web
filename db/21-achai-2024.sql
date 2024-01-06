@@ -148,7 +148,8 @@ DROP TABLE IF EXISTS `emaillist`;
 CREATE TABLE `emaillist` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   `addr` varchar(100) NOT NULL,
-  `reserve_quantity` int DEFAULT '2',  
+  `reserve_quantity` int DEFAULT '2', 
+  `last_reserve_datetime` INT DEFAULT TIME_TO_SEC(CURRENT_TIMESTAMP),
   UNIQUE KEY `addr` (`addr`)
 );
 

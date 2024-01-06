@@ -84,13 +84,7 @@ class EmailController extends Controller{
 
                 try {    
                     if(count($resultsetEmail) <= 0){
-                        $this->mail->send();                 
-                        $this->array['result'] = 'E-mail enviado com sucesso';
-                        unlink('../assets/imgs/'.$nameImg.'.jpg'); 
-
-
-                        $this->array['result'] = 'Reservado com sucesso'; 
-                        EmailList::insert(['addr'=>$userEmail])->execute();
+                        $this->array['error'] = "Você ja bateu quantidade de objetos que pode reservar por dia"; 
 
                     }else if($resultsetEmail[0]['reserve_quantity'] > 0){
                         $this->mail->send();                 
@@ -154,7 +148,7 @@ class EmailController extends Controller{
                $this->mail->addAddress("{$userEmail}");
                $this->mail->Subject = $subject;
                $this->mail->Body = " Codigo de validação: <br> <h1>$code</h1> $msg";
-               $this->mail->send();           
+            //    $this->mail->send();           
 
                 ListValidationCodes::insertSP($code, $thingId);
                 
