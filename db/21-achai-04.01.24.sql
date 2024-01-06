@@ -40,7 +40,7 @@ CREATE TABLE `admins` (
 -- Extraindo dados da tabela `admins`
 --
 
-INSERT INTO `admins` VALUES (7,'douglas2570@gmail.com','5649b74a2b26ee6b41a5a9c2effacd44','douglas2570@gmail.com','A0E812B01BFC8E2417C254A074DF599D');
+INSERT INTO `admins` VALUES (7,'root','202cb962ac59075b964b07152d234b70','root','A0E812B01BFC8E2417C254A074DF599D');
 -- --------------------------------------------------------
 
 --
