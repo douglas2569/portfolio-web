@@ -61,7 +61,7 @@ class EmailController extends Controller{
         
         $resultsetEmail = EmailList::select()->where('addr',$userEmail)->get();           
         if (count($resultsetEmail) > 0 && $resultsetEmail[0]['reserve_quantity'] <= 0) {
-            $this->array['error'] = "Você excedeu a quantidade de reservas, tente novamente em 8hrs"; 
+            $this->array['error'] = "Você excedeu a quantidade de reservas, tente novamente em 3hrs"; 
             echo json_encode($this->array);       
             exit;
         }

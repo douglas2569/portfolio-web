@@ -4,6 +4,7 @@ use \core\Model;
 
 class ListValidationCodes extends Model { 
 
+    
     public static function insertSP($code, $thingId){             
         $data = array(
             'code' => $code,

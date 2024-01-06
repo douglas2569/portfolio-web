@@ -236,11 +236,11 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_update_emaillist;
 
 DELIMITER $$
-CREATE PROCEDURE sp_update_emaillist(emaillist_id_p INT
+CREATE PROCEDURE sp_update_emaillist(emaillist_id_p INT, expiration_time_p VARCHAR(50) 
   )
 
 BEGIN 
-    DECLARE reserved_quantity INT DEFAULT 0;    
+    DECLARE reserved_quantity INT DEFAULT 0;
     DECLARE track_no VARCHAR(10) DEFAULT '0/0';
     DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
     
@@ -254,9 +254,12 @@ BEGIN
     
     SET track_no = '1/2';
     IF reserved_quantity > 0 THEN          
-      UPDATE emaillist SET reserve_quantity = reserve_quantity - 1, last_reserve_datetime = TIME_TO_SEC(NOW()) WHERE id = emaillist_id_p;          
-    END IF;
-
+      UPDATE emaillist SET reserve_quantity = reserve_quantity - 1, last_reserve_datetime = TIME_TO_SEC(NOW()) + TIME_TO_SEC(expiration_time_p) WHERE id = emaillist_id_p;              
+    END IF;    
+    
+    SET track_no = '2/2';
+    UPDATE emaillist SET reserve_quantity = 3, last_reserve_datetime = TIME_TO_SEC(NOW()) + TIME_TO_SEC(expiration_time_p) WHERE last_reserve_datetime <= TIME_TO_SEC(NOW()) AND reserve_quantity = 0;          
+    
     SET track_no = '0/2';
     SET @full_error = 'successfully executed.';
     SELECT track_no, @full_error;
