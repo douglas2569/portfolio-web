@@ -11,7 +11,7 @@ class ListValidationCodes extends Model {
         ); 
                 
         
-        return ListValidationCodes::insert_sp("CALL sp_register_listvalidationcodes('$data[code]','$data[thing_id]')");        
+        return ListValidationCodes::query("CALL sp_register_listvalidationcodes('$data[code]','$data[thing_id]')");        
         
     }
 

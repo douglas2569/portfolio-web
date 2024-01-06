@@ -148,7 +148,7 @@ DROP TABLE IF EXISTS `emaillist`;
 CREATE TABLE `emaillist` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   `addr` varchar(100) NOT NULL,
-  `reserve_quantity` int DEFAULT '2', 
+  `reserve_quantity` int DEFAULT '3', 
   `last_reserve_datetime` INT DEFAULT TIME_TO_SEC(CURRENT_TIMESTAMP),
   UNIQUE KEY `addr` (`addr`)
 );
@@ -162,7 +162,7 @@ DROP TABLE IF EXISTS `listvalidationcodes`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `listvalidationcodes` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `code` int NOT NULL,
+  `code` INT(4) NOT NULL,
   `create_at` INT DEFAULT TIME_TO_SEC(CURRENT_TIMESTAMP),
   
   `thing_id` INT NOT NULL,
@@ -192,6 +192,7 @@ END
 $$
 DELIMITER ;
 
+
 -- --------------------------------------------------------
 
 DROP PROCEDURE IF EXISTS sp_register_listvalidationcodes;
@@ -220,13 +221,46 @@ BEGIN
         INSERT INTO listvalidationcodes (code, thing_id) values(code_p, thing_id_p);
 
         SET track_no = '2/2'; 
-        DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300;        
+        DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300 OR (TIME_TO_SEC(NOW())) - (create_at)  < 0;        
                 
         SET track_no = '0/2';
         SET @full_error = 'successfully executed.';
         SELECT track_no, @full_error;
     COMMIT;
 
+END; $$
+
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS sp_update_emaillist;
+
+DELIMITER $$
+CREATE PROCEDURE sp_update_emaillist(emaillist_id_p INT
+  )
+
+BEGIN 
+    DECLARE reserved_quantity INT DEFAULT 0;    
+    DECLARE track_no VARCHAR(10) DEFAULT '0/0';
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
+    
+    BEGIN    
+        GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
+        SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+        SELECT track_no, @full_error;
+    END;
+
+    SELECT reserve_quantity INTO reserved_quantity FROM emaillist WHERE id = emaillist_id_p;
+    
+    SET track_no = '1/2';
+    IF reserved_quantity > 0 THEN          
+      UPDATE emaillist SET reserve_quantity = reserve_quantity - 1, last_reserve_datetime = TIME_TO_SEC(NOW()) WHERE id = emaillist_id_p;          
+    END IF;
+
+    SET track_no = '0/2';
+    SET @full_error = 'successfully executed.';
+    SELECT track_no, @full_error;
+         
 END; $$
 
 DELIMITER ;

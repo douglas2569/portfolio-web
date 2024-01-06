@@ -34,36 +34,40 @@ class EmailController extends Controller{
     }
         
     public function sendQRCodeEmail(){
+        $userEmail = filter_input(INPUT_POST, 'useremail', FILTER_VALIDATE_EMAIL);
+
+        $resultsetEmail = EmailList::select()->where('addr',$userEmail)->get();           
+        if (count($resultsetEmail) > 0 && $resultsetEmail[0]['reserve_quantity'] <= 0) {
+            $this->array['error'] = "Você excedeu a quantidade de reservas, tente novamente em 8hrs"; 
+            echo json_encode($this->array);       
+            exit;
+        }
+
         $id = filter_input(INPUT_POST, 'id');        
         $adminEmail = 'equipeanti404@gmail.com';
         $local = filter_input(INPUT_POST, 'local');
         $description = filter_input(INPUT_POST, 'description');
         $userName = filter_input(INPUT_POST, 'username');
-        $userEmail = filter_input(INPUT_POST, 'useremail', FILTER_VALIDATE_EMAIL);
         $subject = filter_input(INPUT_POST, 'subject');        
         $path = filter_input(INPUT_POST, 'path');        
         $validationCode = filter_input(INPUT_POST, 'validationCode');               
-         
-
-        $options = new QROptions([
-            'version'      => 10,
-            'outputType'   => QRCode::OUTPUT_IMAGE_JPG,
-            'eccLevel'     => QRCode::ECC_H,
-            'scale'        => 5,
-            'imageBase64'  => false
-        ]);
-
+        
         
         if($adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode){
-            
+
+            $options = new QROptions([
+                'version'      => 10,
+                'outputType'   => QRCode::OUTPUT_IMAGE_JPG,
+                'eccLevel'     => QRCode::ECC_H,
+                'scale'        => 5,
+                'imageBase64'  => false
+            ]); 
+
             $code = ListValidationCodes::select()
                                         ->where('code',$validationCode)
                                         ->where('thing_id',$id)
                                         ->get();
-            $resultsetEmail = EmailList::select()->where('addr',$userEmail)->get();            
-           
-           
-
+                     
             if(count($code) > 0 ){  
                 $this->mail->addAddress("{$adminEmail}");                                      
                 $this->mail->addAddress("{$userEmail}");                                      
@@ -82,40 +86,25 @@ class EmailController extends Controller{
                 $this->mail->Subject = $subject;
                 $this->mail->AltBody = 'O objeto de código '.$id.' foi encontrado no(a) '.$local.'. Descrição: '.$description;
 
-                try {    
-                    if(count($resultsetEmail) <= 0){
-                        $this->array['error'] = "Você ja bateu quantidade de objetos que pode reservar por dia"; 
+                try {     
+                    //$this->mail->send();
 
-                    }else if($resultsetEmail[0]['reserve_quantity'] > 0){
-                        $this->mail->send();                 
-                        unlink('../assets/imgs/'.$nameImg.'.jpg'); 
-                        
-                        EmailList::update()->set(
-                            [
-                                'reserve_quantity' => --$resultsetEmail[0]['reserve_quantity']
-                            ]
-                                )->where('addr', $userEmail)->execute();
-                                
-                        $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
-
-                    }else{
-                        $this->mail->send();                 
-                        unlink('../assets/imgs/'.$nameImg.'.jpg'); 
-                        
-                        EmailList::update()->set(
-                            [
-                                'reserve_quantity' => 2
-                            ]
-                                )->where('addr', $userEmail)->execute();
-                                
+                    if (count($resultsetEmail) <= 0) {
+                        EmailList::insert(['addr'=>$userEmail])->execute();
+                    }else{                    
+                        unlink('../assets/imgs/'.$nameImg.'.jpg');
+                        EmailList::updateDecrementLastReserveDatetime($resultsetEmail[0]['id']);
                         $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
                     }
-
                     
+                    if(file_exists('../assets/imgs/'.$nameImg.'.jpg'))
+                        unlink();
+                    $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
 
                 } catch (Exception $e) {
                     $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
                 }
+
 
             }else { 
                 
@@ -128,7 +117,6 @@ class EmailController extends Controller{
             $this->array['error'] = 'Dados obrigatórios não enviados';
         }
         
-
         echo json_encode($this->array);       
         exit;
     }

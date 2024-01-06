@@ -46,7 +46,7 @@ class Model {
         return self::$_h->insert($fields);
     }
 
-    public static function insert_sp($query) {
+    public static function query($query) {
         $con = Database::getInstance();
         $stm = $con->prepare($query);
         
