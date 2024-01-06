@@ -101,7 +101,7 @@ class EmailController extends Controller{
             $this->mail->AltBody = 'O objeto de código '.$id.' foi encontrado no(a) '.$local.'. Descrição: '.$description;
 
             try {     
-                // $this->mail->send();
+                $this->mail->send();
                 if(file_exists('../assets/imgs/'.$nameImg.'.jpg'))
                         unlink('../assets/imgs/'.$nameImg.'.jpg');
 
@@ -135,7 +135,7 @@ class EmailController extends Controller{
                $this->mail->addAddress("{$userEmail}");
                $this->mail->Subject = $subject;
                $this->mail->Body = " Codigo de validação: <br> <h1>$code</h1> $msg";
-            //    $this->mail->send();           
+               $this->mail->send();           
 
                 ListValidationCodes::insertSP($code, $thingId);
                 
