@@ -137,7 +137,6 @@ class ThingController extends Controller {
     
     }
 
-
     public function getAllByDescription($description=[]){
         $things = [];
         
@@ -631,7 +630,8 @@ class ThingController extends Controller {
     }
     
     private function compressImage($fileImage, $newWidth=300, $newHeight=-1, $destinationPath=null, $quality = 100){
-        $image = imagecreatefromstring(file_get_contents($fileImage));
+        // para que essa função funcione ele tem que está habilitada no php.in (gd ou gd2)
+        $image = imagecreatefromstring(file_get_contents($fileImage)); 
         $info = pathinfo($fileImage);
         
         $type = $info['extension'] == 'jpg' ? 'jpeg': $info['extension'];

@@ -46,6 +46,15 @@ class Model {
         return self::$_h->insert($fields);
     }
 
+    public static function query($query) {
+        $con = Database::getInstance();
+        $stm = $con->prepare($query);
+        
+        $resultset = $stm->execute();
+                
+        return $resultset; 
+    }
+
     public static function update($fields = []) {
         self::_checkH();
         return self::$_h->update($fields);

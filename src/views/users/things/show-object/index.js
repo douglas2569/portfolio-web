@@ -114,6 +114,7 @@ class ShowThing extends Controller{
 
             let formDataEmail = new FormData();
             formDataEmail.append('useremail', document.querySelector('#email-form #to').value);                   
+            formDataEmail.append('id', document.querySelector('#first-form #data-id').value);                   
             
             document.querySelector('#send-email-modal').style.display = 'none';
             

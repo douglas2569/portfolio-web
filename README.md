@@ -28,7 +28,7 @@ Este projeto tem por objetivo digitalizar o serviço de Achados e perdidos do Bl
 
 ## Instalação e Manutenção    
 
-Para rodar o projeto é necessário ter em sua maquina um servidor web (o php instalado nele) e o banco de dados MySQL, tudo isso pode ser usado através do software [XAMPP] (https://www.apachefriends.org/), bastando instalá-lo e configurá-lo em sua maquina. Alem disso, se faz necessário a instalação do software [Composer] (https://getcomposer.org) para a instalação de dependências no projeto. 
+Para rodar o projeto é necessário ter em sua maquina um servidor web (o php instalado nele) e o banco de dados MySQL, tudo isso pode ser usado através do software [XAMPP] (https://www.apachefriends.org/), bastando instalá-lo e configurá-lo em sua maquina. Além disso, se faz necessário a instalação do software [Composer] (https://getcomposer.org) para a instalação de dependências no projeto. 
 
 ### Instalação
 1. Instale o executável do xampp e do composer (Só nexts padrão)
@@ -64,7 +64,7 @@ A pasta `/src` é onde se encontra o front-end.
 
 ## Esse projeto está sendo desenvolvido por alunos da UFC do curso SMD. Participantes:
 
-### Programador (back-end/front-end)
+### Programador (front-end/back-end)
 - Carlos Douglas
 
 ### Designers (UI/UX)
