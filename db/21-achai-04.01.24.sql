@@ -65,6 +65,27 @@ INSERT INTO `categories` VALUES (87,'Ver todos','none'),(88,'Eletrônicos','head
 -- --------------------------------------------------------
 
 --
+-- Estrutura da tabela `things`
+--
+
+DROP TABLE IF EXISTS `things`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `things` (
+  `id` int NOT NULL AUTO_INCREMENT  PRIMARY KEY,
+  `description` text,
+  `local` varchar(100) NOT NULL,
+  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `returned_status` tinyint(1) DEFAULT '0',
+  `reserved_status` tinyint(1) DEFAULT '0',
+  `category_id` int NOT NULL DEFAULT '0',
+  `image_address` varchar(64) NOT NULL,
+
+  FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`)
+  
+);
+
+--
 -- Estrutura da tabela `reserved`
 --
 
@@ -73,7 +94,7 @@ DROP TABLE IF EXISTS `reserved`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reserved` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-  `date` datetime NOT NULL,
+  `date` DATETIME NOT NULL,
   `thing_id` INT NOT NULL,
   
   FOREIGN KEY(`thing_id`) REFERENCES `things`(`id`)
@@ -99,26 +120,7 @@ CREATE TABLE `returned` (
 
 -- --------------------------------------------------------
 
---
--- Estrutura da tabela `things`
---
 
-DROP TABLE IF EXISTS `things`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `things` (
-  `id` int NOT NULL AUTO_INCREMENT  PRIMARY KEY,
-  `description` text,
-  `local` varchar(100) NOT NULL,
-  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `returned_status` tinyint(1) DEFAULT '0',
-  `reserved_status` tinyint(1) DEFAULT '0',
-  `category_id` int NOT NULL DEFAULT '0',
-  `image_address` varchar(64) NOT NULL,
-
-  FOREIGN KEY(`category_id`) REFERENCES `categories`(`id`)
-  
-);
 
 INSERT INTO `things` VALUES (245,'','Sala 01','2023-10-09 11:47:28',0,0,88,'api/assets/imgs/de85dc47df7ed0874bf9ca789a0a3157.png'),(246,'','Lab 03','2023-10-09 11:48:00',0,0,89,'api/assets/imgs/80f0c18812f8d20af6fbf90ae7326e59.png');
 
