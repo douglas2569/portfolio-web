@@ -68,6 +68,7 @@ class LayoutHeaderContent{
         linkLogo.appendChild(imgLogo);
         
         divHeaderTopHeader.appendChild(linkLogo);
+        
         divHeaderTop.appendChild(divHeaderTopHeader);
         divHeaderTop.appendChild(divHeaderTopBody);
 
