@@ -32,10 +32,33 @@ class EmailController extends Controller{
         $this->mail->FromName = 'Achaí';
         
     }
+    
+    private function manageEmailList($resultsetEmail, $userEmail){
+        try { 
+            if (count($resultsetEmail) <= 0) {
+                EmailList::insert(['addr'=>$userEmail])->execute();
+            }else{ 
+                EmailList::updateDecrementLastReserveDatetime($resultsetEmail[0]['id']);
+                $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
+            }
+
+        } catch (Exception $e) {
+            $this->array['error'] = "Erro ao inserirEmaillist";
+        }
+    }
         
     public function sendQRCodeEmail(){
         $userEmail = filter_input(INPUT_POST, 'useremail', FILTER_VALIDATE_EMAIL);
-
+        $id = filter_input(INPUT_POST, 'id');        
+        
+        $validationCode = filter_input(INPUT_POST, 'validationCode');               
+        $code = ListValidationCodes::select()->where('code',$validationCode)->where('thing_id',$id)->get();
+        if(count($code) <= 0 ){  
+            $this->array['error'] = "Codigo invalido"; 
+            echo json_encode($this->array);       
+            exit;
+        }
+        
         $resultsetEmail = EmailList::select()->where('addr',$userEmail)->get();           
         if (count($resultsetEmail) > 0 && $resultsetEmail[0]['reserve_quantity'] <= 0) {
             $this->array['error'] = "Você excedeu a quantidade de reservas, tente novamente em 8hrs"; 
@@ -43,15 +66,12 @@ class EmailController extends Controller{
             exit;
         }
 
-        $id = filter_input(INPUT_POST, 'id');        
         $adminEmail = 'equipeanti404@gmail.com';
         $local = filter_input(INPUT_POST, 'local');
         $description = filter_input(INPUT_POST, 'description');
         $userName = filter_input(INPUT_POST, 'username');
         $subject = filter_input(INPUT_POST, 'subject');        
-        $path = filter_input(INPUT_POST, 'path');        
-        $validationCode = filter_input(INPUT_POST, 'validationCode');               
-        
+        $path = filter_input(INPUT_POST, 'path'); 
         
         if($adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode){
 
@@ -61,57 +81,36 @@ class EmailController extends Controller{
                 'eccLevel'     => QRCode::ECC_H,
                 'scale'        => 5,
                 'imageBase64'  => false
-            ]); 
-
-            $code = ListValidationCodes::select()
-                                        ->where('code',$validationCode)
-                                        ->where('thing_id',$id)
-                                        ->get();
-                     
-            if(count($code) > 0 ){  
-                $this->mail->addAddress("{$adminEmail}");                                      
-                $this->mail->addAddress("{$userEmail}");                                      
-                                                
-                $nameImg = md5(time().rand(0,99));
-                
-                (new QRcode($options))->render($path,'../assets/imgs/'.$nameImg.'.jpg');   
-                $this->mail->addAttachment('../assets/imgs/'.$nameImg.'.jpg','QRCodeObjetoPerdido.jpeg');                                                                                              
-
-                $this->mail->Body = "<p>
-                                    Código:". $id." <br>
-                                    Local:".$local." <br>
-                                    Descrição:".$description."<br>                                                                                                                                        
-                            </p>";
-                            
-                $this->mail->Subject = $subject;
-                $this->mail->AltBody = 'O objeto de código '.$id.' foi encontrado no(a) '.$local.'. Descrição: '.$description;
-
-                try {     
-                    //$this->mail->send();
-
-                    if (count($resultsetEmail) <= 0) {
-                        EmailList::insert(['addr'=>$userEmail])->execute();
-                    }else{                    
-                        unlink('../assets/imgs/'.$nameImg.'.jpg');
-                        EmailList::updateDecrementLastReserveDatetime($resultsetEmail[0]['id']);
-                        $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
-                    }
-                    
-                    if(file_exists('../assets/imgs/'.$nameImg.'.jpg'))
-                        unlink();
-                    $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
-
-                } catch (Exception $e) {
-                    $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
-                }
-
-
-            }else { 
-                
-                $this->array['error'] = "Codigo invalido"; 
-                
-            }
+            ]);     
+             
+            $this->mail->addAddress("{$adminEmail}");                                      
+            $this->mail->addAddress("{$userEmail}");                                      
+                                            
+            $nameImg = md5(time().rand(0,99));
             
+            (new QRcode($options))->render($path,'../assets/imgs/'.$nameImg.'.jpg');   
+            $this->mail->addAttachment('../assets/imgs/'.$nameImg.'.jpg','QRCodeObjetoPerdido.jpeg');                                                                                              
+
+            $this->mail->Body = "<p>
+                                Código:". $id." <br>
+                                Local:".$local." <br>
+                                Descrição:".$description."<br>                                                                                                                                        
+                        </p>";
+                        
+            $this->mail->Subject = $subject;
+            $this->mail->AltBody = 'O objeto de código '.$id.' foi encontrado no(a) '.$local.'. Descrição: '.$description;
+
+            try {     
+                // $this->mail->send();
+                if(file_exists('../assets/imgs/'.$nameImg.'.jpg'))
+                        unlink('../assets/imgs/'.$nameImg.'.jpg');
+
+                $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
+            }catch (Exception $e) {
+                $this->array['error'] = "Erro ao enviar o e-mail: {$this->mail->ErrorInfo}";
+            }
+        
+            $this->manageEmailList($resultsetEmail, $userEmail);            
 
         }else{
             $this->array['error'] = 'Dados obrigatórios não enviados';
@@ -157,14 +156,4 @@ class EmailController extends Controller{
 
     }
 
-    private function checkDateDifference($date, $daysLimit){        
-        $dateThing = new DateTime($date);
-        $now = new DateTime('now', $this->UTCTimeZone);                               
-        $now->setTimezone($this->timeZone);                                      
-        $diffDates =  $now->format('U') - $dateThing->format('U');        
-        return ($diffDates >= $daysLimit);
-    }
-    
-   
-    
 }
