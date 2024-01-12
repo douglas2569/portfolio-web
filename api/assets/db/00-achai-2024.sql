@@ -195,42 +195,42 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 
--- DROP PROCEDURE IF EXISTS sp_register_listvalidationcodes;
--- DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_register_listvalidationcodes;
+DELIMITER $$
 
--- CREATE PROCEDURE sp_register_listvalidationcodes(	  
---     code_p INT,
---     thing_id_p INT
---   )
+CREATE PROCEDURE sp_register_listvalidationcodes(	  
+    code_p INT,
+    thing_id_p INT
+  )
 
--- BEGIN    
+BEGIN    
     
---     DECLARE track_no VARCHAR(10) DEFAULT '0/0';
---     DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
+    DECLARE track_no VARCHAR(10) DEFAULT '0/0';
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
     
---     BEGIN    
---         GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
---         SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
---         SELECT track_no, @full_error;
+    BEGIN    
+        GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
+        SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+        SELECT track_no, @full_error;
 
---         ROLLBACK;    
---     END;
+        ROLLBACK;    
+    END;
 
---     START TRANSACTION;
---         SET track_no = '1/2';
---         INSERT INTO listvalidationcodes (code, thing_id) values(code_p, thing_id_p);
+    START TRANSACTION;
+        SET track_no = '1/2';
+        INSERT INTO listvalidationcodes (code, thing_id) values(code_p, thing_id_p);
 
---         SET track_no = '2/2'; 
---         DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300 OR (TIME_TO_SEC(NOW())) - (create_at)  < 0;        
+        SET track_no = '2/2'; 
+        DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300 OR (TIME_TO_SEC(NOW())) - (create_at)  < 0;        
                 
---         SET track_no = '0/2';
---         SET @full_error = 'successfully executed.';
---         SELECT track_no, @full_error;
---     COMMIT;
+        SET track_no = '0/2';
+        SET @full_error = 'successfully executed.';
+        SELECT track_no, @full_error;
+    COMMIT;
 
--- END; $$
+END; $$
 
--- DELIMITER ;
+DELIMITER ;
 
 
 -- Não será mais usado pq um msm email pode reservar quanto ele quiser ele so nao poderia reservar 3x em um pequeno espaço de tempo, ou seja, eu teria que ter um historico das ultimas 3 reservas e nao ficar comparando com o ultimo
