@@ -84,43 +84,7 @@ export default class Model{
           console.log(error);
         }   
     }
-
-    /*
-    async delete(addressRedirecting, id, formData){
-      
-  
-    const endpoint = `${this.path}${this.nameController}/delete/${id}`;
-    
-    const data = {};
-      formData.forEach(function(value, key){
-      data[key] = value;
-        
-      });
-      
-      formData = JSON.stringify(data); 
-    
-    try {
-      let response = await fetch(endpoint, {
-        method: "DELETE",
-        body:  formData
-
-      });  
-      
-      response = await response.json();
-
-      if(response.error == ''){
-        alert("Excluido com Sucesso");                 
-        window.location.href = addressRedirecting;      
-
-      }else{
-        alert(response.error);                 
-      }
-    } catch (error) {
-      alert(error);
-    }
-
-    }
-*/
+   
 
 async delete(addressRedirecting, id, formData){
   const endpoint = `${this.path}${this.nameController}/delete/${id}`;
