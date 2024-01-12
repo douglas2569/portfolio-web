@@ -34,11 +34,15 @@ class EmailController extends Controller{
     }
     
     private function manageEmailList($resultsetEmail, $userEmail){
+        // var_dump($resultsetEmail); exit;
         try { 
-            if (count($resultsetEmail) <= 0) {
+            if (count($resultsetEmail[0]) <= 0) {
                 EmailList::insert(['addr'=>$userEmail])->execute();
             }else{ 
-                EmailList::updateDecrementLastReserveDatetime($resultsetEmail[0]['id']);
+                EmailList::update()->set([
+                        'reserve_quantity' => ++$resultsetEmail[0]['reserve_quantity']
+                    ]
+                    )->where('id', $resultsetEmail[0]['id'])->execute();
                 $this->array['result'] = 'E-mail enviado e objeto reservado com sucesso';
             }
 
@@ -60,8 +64,8 @@ class EmailController extends Controller{
         }
         
         $resultsetEmail = EmailList::select()->where('addr',$userEmail)->get();           
-        if (count($resultsetEmail) > 0 && $resultsetEmail[0]['reserve_quantity'] <= 0) {
-            $this->array['error'] = "Você excedeu a quantidade de reservas, tente novamente em 3hrs"; 
+        if (count($resultsetEmail) > 0 && !$resultsetEmail[0]['status']) {
+            $this->array['error'] = "Você foi bloqueado. Entrar em contato com a secretaria"; 
             echo json_encode($this->array);       
             exit;
         }

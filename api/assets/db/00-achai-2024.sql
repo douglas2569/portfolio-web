@@ -148,8 +148,8 @@ DROP TABLE IF EXISTS `emaillist`;
 CREATE TABLE `emaillist` (
   `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY ,
   `addr` varchar(100) NOT NULL,
-  `reserve_quantity` int DEFAULT '3', 
-  `last_reserve_datetime` INT DEFAULT TIME_TO_SEC(CURRENT_TIMESTAMP),
+  `reserve_quantity` INT DEFAULT 0, 
+  `status`  TINYINT DEFAULT 1,
   UNIQUE KEY `addr` (`addr`)
 );
 
@@ -195,76 +195,77 @@ DELIMITER ;
 
 -- --------------------------------------------------------
 
-DROP PROCEDURE IF EXISTS sp_register_listvalidationcodes;
-DELIMITER $$
+-- DROP PROCEDURE IF EXISTS sp_register_listvalidationcodes;
+-- DELIMITER $$
 
-CREATE PROCEDURE sp_register_listvalidationcodes(	  
-    code_p INT,
-    thing_id_p INT
-  )
+-- CREATE PROCEDURE sp_register_listvalidationcodes(	  
+--     code_p INT,
+--     thing_id_p INT
+--   )
 
-BEGIN    
+-- BEGIN    
     
-    DECLARE track_no VARCHAR(10) DEFAULT '0/0';
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
+--     DECLARE track_no VARCHAR(10) DEFAULT '0/0';
+--     DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
     
-    BEGIN    
-        GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
-        SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
-        SELECT track_no, @full_error;
+--     BEGIN    
+--         GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
+--         SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+--         SELECT track_no, @full_error;
 
-        ROLLBACK;    
-    END;
+--         ROLLBACK;    
+--     END;
 
-    START TRANSACTION;
-        SET track_no = '1/2';
-        INSERT INTO listvalidationcodes (code, thing_id) values(code_p, thing_id_p);
+--     START TRANSACTION;
+--         SET track_no = '1/2';
+--         INSERT INTO listvalidationcodes (code, thing_id) values(code_p, thing_id_p);
 
-        SET track_no = '2/2'; 
-        DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300 OR (TIME_TO_SEC(NOW())) - (create_at)  < 0;        
+--         SET track_no = '2/2'; 
+--         DELETE FROM listvalidationcodes WHERE (TIME_TO_SEC(NOW())) - (create_at) >= 300 OR (TIME_TO_SEC(NOW())) - (create_at)  < 0;        
                 
-        SET track_no = '0/2';
-        SET @full_error = 'successfully executed.';
-        SELECT track_no, @full_error;
-    COMMIT;
+--         SET track_no = '0/2';
+--         SET @full_error = 'successfully executed.';
+--         SELECT track_no, @full_error;
+--     COMMIT;
 
-END; $$
+-- END; $$
 
-DELIMITER ;
+-- DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS sp_update_emaillist;
+-- Não será mais usado pq um msm email pode reservar quanto ele quiser ele so nao poderia reservar 3x em um pequeno espaço de tempo, ou seja, eu teria que ter um historico das ultimas 3 reservas e nao ficar comparando com o ultimo
+-- DROP PROCEDURE IF EXISTS sp_update_emaillist;
 
-DELIMITER $$
-CREATE PROCEDURE sp_update_emaillist(emaillist_id_p INT, expiration_time_p VARCHAR(50) 
-  )
+-- DELIMITER $$
+-- CREATE PROCEDURE sp_update_emaillist(emaillist_id_p INT, expiration_time_p VARCHAR(50) 
+--   )
 
-BEGIN 
-    DECLARE reserved_quantity INT DEFAULT 0;
-    DECLARE track_no VARCHAR(10) DEFAULT '0/0';
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
+-- BEGIN 
+--     DECLARE reserved_quantity INT DEFAULT 0;
+--     DECLARE track_no VARCHAR(10) DEFAULT '0/0';
+--     DECLARE EXIT HANDLER FOR SQLEXCEPTION, NOT FOUND, SQLWARNING
     
-    BEGIN    
-        GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
-        SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
-        SELECT track_no, @full_error;
-    END;
+--     BEGIN    
+--         GET DIAGNOSTICS CONDITION 1 @`errno` = MYSQL_ERRNO, @`sqlstate` = RETURNED_SQLSTATE, @`text` = MESSAGE_TEXT;
+--         SET @full_error = CONCAT('ERROR ', @`errno`, ' (', @`sqlstate`, '): ', @`text`);
+--         SELECT track_no, @full_error;
+--     END;
 
-    SELECT reserve_quantity INTO reserved_quantity FROM emaillist WHERE id = emaillist_id_p;
+--     SELECT reserve_quantity INTO reserved_quantity FROM emaillist WHERE id = emaillist_id_p;
     
-    SET track_no = '1/2';
-    IF reserved_quantity > 0 THEN          
-      UPDATE emaillist SET reserve_quantity = reserve_quantity - 1, last_reserve_datetime = TIME_TO_SEC(NOW()) + TIME_TO_SEC(expiration_time_p) WHERE id = emaillist_id_p;              
-    END IF;    
+--     SET track_no = '1/2';
+--     IF reserved_quantity > 0 THEN          
+--       UPDATE emaillist SET reserve_quantity = reserve_quantity - 1, last_reserve_datetime = TIME_TO_SEC(NOW()) + TIME_TO_SEC(expiration_time_p) WHERE id = emaillist_id_p;              
+--     END IF;    
     
-    SET track_no = '2/2';
-    UPDATE emaillist SET reserve_quantity = 3, last_reserve_datetime = TIME_TO_SEC(NOW()) + TIME_TO_SEC(expiration_time_p) WHERE last_reserve_datetime <= TIME_TO_SEC(NOW()) AND reserve_quantity = 0;          
+--     SET track_no = '2/2';
+--     UPDATE emaillist SET reserve_quantity = 3, last_reserve_datetime = TIME_TO_SEC(NOW()) + TIME_TO_SEC(expiration_time_p) WHERE last_reserve_datetime <= TIME_TO_SEC(NOW()) AND reserve_quantity = 0;          
     
-    SET track_no = '0/2';
-    SET @full_error = 'successfully executed.';
-    SELECT track_no, @full_error;
+--     SET track_no = '0/2';
+--     SET @full_error = 'successfully executed.';
+--     SELECT track_no, @full_error;
          
-END; $$
+-- END; $$
 
-DELIMITER ;
+-- DELIMITER ;
 
