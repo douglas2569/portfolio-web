@@ -7,7 +7,7 @@ use \src\models\EmailList;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use chillerlan\QRCode\{QRCode, QROptions};
-use DateTime;
+use \src\services\AuthService;
 
 require '../vendor/autoload.php';
 
@@ -158,6 +158,39 @@ class EmailController extends Controller{
        echo json_encode($this->array);       
        exit;
 
+    }
+
+
+    function changeStatusEmail(){        
+        $hash = filter_input(INPUT_POST, 'hash');          
+        if(!(AuthService::checkHash($hash))){
+            $this->array['error'] = 'Acesso negado. Contate o Administrador';
+            
+            echo json_encode($this->array);
+            exit;
+        }
+                
+        $id = filter_input(INPUT_POST, 'id');        
+        $status = filter_input(INPUT_POST, 'status');        
+        $resultsetEmail = EmailList::select()->where('id',$id)->get(); 
+
+        try { 
+            if (count($resultsetEmail[0]) > 0) { 
+
+                EmailList::update()->set([
+                    'status' => $status
+                ]
+                )->where('id', $resultsetEmail[0]['id'])->execute();
+                $this->array['result'] = 'Atividade executada com sucesso';
+               
+            }
+
+        } catch (Exception $e) {
+            $this->array['error'] = "Erro ao tentar atualizar o registro";
+        }
+
+        echo json_encode($this->array);       
+        exit;
     }
 
 }
