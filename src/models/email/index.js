@@ -41,4 +41,23 @@ export default class ModelEmail extends Model{
       }   
   }
 
+  async lockUnlockEmail(formData){
+    
+    const endpoint = `${this.path}${this.nameController}/changestatusemail`;                        
+      try {
+        let response = await fetch(endpoint, {
+          method: "POST",            
+          body:  formData          
+        });  
+        
+        response = await response.json();        
+        return response;                 
+        
+      } catch (error) {
+        console.log('Erro no codigo do sistema: '+error);
+      }   
+  }
+
+
+
 }

@@ -35,3 +35,5 @@ $router->post('/zip/delete/{id}', 'ZipController@delete');
 
 $router->post('/email/sendqrcodeemail', 'EmailController@sendQRCodeEmail');
 $router->post('/email/sendverificationemail', 'EmailController@sendVerificationEmail');
+
+$router->post('/email/changestatusemail', 'EmailController@changeStatusEmail');
