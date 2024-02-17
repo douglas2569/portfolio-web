@@ -13,6 +13,8 @@ import HelperCategories from './src/views/helpers/categories/index.js';
 import HelperStatusAllThingsRender from './src/views/helpers/statusallthingsrender/index.js';
 
 import config from './config.js';
+//queue data structure
+import queueCategory from './ArrayQueueCategory.js'
 
 class Home {
     constructor(){
@@ -218,6 +220,114 @@ class Home {
 
     }
 
+    //queue data structure
+    toggleCategoryPanel(){
+        if(document.querySelector('.categories-panel-modal').style.display !== null){
+            document.querySelector('.categories-panel-modal').style.display = 'none';
+            
+            document.querySelector('.header-top-body .search-button').style.display = 'inline-block';
+            document.querySelector('.container-header').style.display = 'flex';
+            document.querySelector('main .container .things-list').style.display = 'flex';
+            document.querySelector('ul.breadcrumb').style.display = 'none';                    
+            
+        }        
+    }
+
+    //queue data structure
+    addImgsCategories(imgs=null){
+        if(imgs)
+            const imgs = document.querySelectorAll('.categories-list a img');
+
+        imgs.forEach((img)=>{
+                           
+            if(img.src.includes('headphones')){
+                img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_GRAD0_opsz40.svg`                                
+                
+            }
+            if(img.src.includes('water_bottle')){
+                img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_GRAD0_opsz40.svg`
+            }
+            
+            if(img.src.includes('umbrella')){
+                img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_GRAD0_opsz40.svg`
+            }     
+        })
+    }
+
+    //queue data structure
+    categoryVigilance(){ 
+        const filters =  document.querySelectorAll(".filter-things span");
+
+        let busy = false;
+
+        setTimeout(()=>{
+            if(this.queueCategory.length > 0 && !busy){ 
+                busy = true;               
+
+                if(this.queueCategory[0]['link'].getAttribute('class') === 'active'){                        
+                                                 
+                    this.queueCategory[0]['link'].removeAttribute('class');                                              
+                    this.addImgsCategories();
+                    
+                    const allThings = await this.modelThings.getAll();
+                    const msg = await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object'); 
+                    console.log(`${msg} categorias`);
+
+                    this.toggleCategoryPanel();
+
+                    this.queueCategory.shift();                    
+                }else{                    
+                    const allThings = {};
+                    const lostThingsFilters = filters.item(0).getAttribute('status');   
+
+                    for (let j = 0; j < allLinks.length; j++) {                                  
+                        allLinks[j].removeAttribute('class');                 
+                    }
+                    this.addImgsCategories();
+
+                    if(this.queueCategory[0]['link'].getAttribute('class') === null){                    
+                        this.queueCategory[0]['link'].setAttribute('class', 'active');
+                        const img = this.queueCategory[0]['link'].querySelector('a img');
+                        this.addImgsCategories([img]);
+                    }
+
+                    if(this.queueCategory[0]['categoriesId'] == "0" &&  Number.parseInt(lostThingsFilters)){
+                        allThings = await this.modelThings.getAll();
+    
+                    }else if(this.queueCategory[0]['categoriesId'] == "0" &&  !Number.parseInt(lostThingsFilters)){
+                        allThings = await this.modelThings.getThingsReserved(); 
+                    
+                    }else if(Number.parseInt(lostThingsFilters)){
+                        allThings = await this.modelThings.getThingsByCategoryId(categoriesId);  
+                        
+                    }else{
+                        allThings = await this.modelThings.getThingsByCategoryIdAndReserved(categoriesId);  
+                    }
+                    
+                    const thingsList = document.querySelector(".things-list");              
+    
+                    thingsList.innerHTML = "";
+                    
+                    let msg = await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object');                   
+                    console.log(`${msg} categorias`);
+                    
+                    this.toggleCategoryPanel();
+                    this.queueCategory.shift();  
+                }
+
+                busy = false;                
+                
+            }else{
+                if (busy)                    
+                    console.log('Ocupado');
+                
+                else
+                    console.log('nenhuma requisição na fila');
+            }
+        },1000);
+
+    }
+
 }
 
 const home = new Home();
@@ -234,9 +344,12 @@ home.appendFooter();
 home.setImgBanner();
 home.createInformationBanner();
 await home.handleThingsByCategories();
+home.categoryVigilance();
 
 HelperSearch.createModalSearch();
 HelperSearch.searchItem();
 HelperSearch.openSearchModal();
 HelperSearch.closeSearchModal();
+
+
 

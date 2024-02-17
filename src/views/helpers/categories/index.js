@@ -6,6 +6,8 @@ import HelperTabOrder from '../../helpers/taborder/index.js';
 import tabOrderManager from "../../admin/things/manager/taborder/index.js";
 import HelperStatusAllThingsRender from '../../helpers/statusallthingsrender/index.js';
 
+import queueCategory from '../../../../ArrayQueueCategory.js';
+
 class HelperCategories{
     constructor(){}
 
@@ -18,7 +20,7 @@ class HelperCategories{
         let categoriesLinks = selectOptions;        
         
         for (let i = 0; i < categoriesLinks.length; i++) {
-            categoriesLinks[i].addEventListener('change',async(e)=>{                
+            categoriesLinks[i].addEventListener('change', async(e)=>{                
                 let categoriesId = e.target.value;  
                 
                 // let categoriesName = categoriesLinks[i].querySelector(`option[value='${categoriesLinks[i].value}']`).textContent; 
@@ -37,7 +39,7 @@ class HelperCategories{
 
                 thingsList.innerHTML = "";
                 
-                this.layoutThing.create(thingsList, allThingsReserved, true, 'admin/things/thingreserved');                 
+                await this.layoutThing.create(thingsList, allThingsReserved, true, 'admin/things/thingreserved');                 
             });
             
         }
@@ -80,7 +82,7 @@ class HelperCategories{
 
 
     }   
-
+    /*
     static async handleThingsByCategories(allLinks){        
         
         if(allLinks === null) return;
@@ -196,12 +198,13 @@ class HelperCategories{
                     }
                   
                 });
-
                 
                 
             }        
         
     }
+    */
+
 
     static handleThingsByCategoriesModal(allLinks){
         this.modelThings = new ModelThings();
@@ -271,6 +274,25 @@ class HelperCategories{
             });
             
         }
+    }
+
+    //queue data structure
+    static async handleThingsByCategories(allLinks){        
+        
+        if(allLinks === null) return;        
+            
+            const filters =  document.querySelectorAll(".filter-things span");
+
+            for (let i = 0; i < allLinks.length; i++) {                
+                if(allLinks[i].querySelector('a').getAttribute('id') === 'all-categories') continue;                
+                
+                const categoriesId = allLinks[i].querySelector('a').getAttribute("data-id");   
+                allLinks[i].addEventListener('click', async(e)=>{ 
+                    this.queueCategory.push({categoriesId, link:allLinks[i], allLinks});                    
+                });                
+                
+            }        
+        
     }
 
 
