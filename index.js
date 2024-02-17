@@ -10,7 +10,6 @@ import LayoutHelpInformation from "./src/views/components/helpinformation/index.
 
 import HelperSearch from './src/views/helpers/search/index.js';
 import HelperCategories from './src/views/helpers/categories/index.js';
-import HelperStatusAllThingsRender from './src/views/helpers/statusallthingsrender/index.js';
 
 import config from './config.js';
 //queue data structure
@@ -107,10 +106,10 @@ class Home {
                 }
 
                 try{
-                    HelperStatusAllThingsRender.statusAllThingsRender = false; 
+                    
                     thingsList.innerHTML = '';
                     let msg = await this.layoutThing.create(thingsList, allThings, true, path);
-                    HelperStatusAllThingsRender.statusAllThingsRender = true;
+                    
                     console.log(`${msg} os objetos por filtros`);                    
                 }catch(erro){
                     console.log('falha no engano da promisse: '+erro);
@@ -126,8 +125,7 @@ class Home {
         let  thingsFilters = document.querySelectorAll(".filter-things span");                        
         
         thingsFilters.forEach((filter) => {
-            filter.addEventListener('click', async ()=>{                    
-                if(!HelperStatusAllThingsRender.statusAllThingsRender) return;
+            filter.addEventListener('click', async ()=>{
 
                 document.querySelectorAll('.categories-list a img').forEach((img)=>{
                            
@@ -219,119 +217,8 @@ class Home {
         container.style.marginTop =  `${(document.querySelector('main .container .things-list').clientHeight)}px`;
 
     }
-
-    //queue data structure
-    toggleCategoryPanel(){
-        if(document.querySelector('.categories-panel-modal').style.display !== null){
-            document.querySelector('.categories-panel-modal').style.display = 'none';
-            
-            document.querySelector('.header-top-body .search-button').style.display = 'inline-block';
-            document.querySelector('.container-header').style.display = 'flex';
-            document.querySelector('main .container .things-list').style.display = 'flex';
-            document.querySelector('ul.breadcrumb').style.display = 'none';                    
-            
-        }        
-    }
-
-    //queue data structure
-    addImgsCategories(pImgs=null){
-           let imgs = document.querySelectorAll('.categories-list a img');
-
-        imgs.forEach((img)=>{
-                           
-            if(img.src.includes('headphones')){
-                img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_GRAD0_opsz40.svg`                                
-                
-            }else if(img.src.includes('water_bottle')){
-                img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_GRAD0_opsz40.svg`
-            }else if(img.src.includes('umbrella')){
-                img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_GRAD0_opsz40.svg`
-            }     
-        })
-    }
-
-    //queue data structure
-    categoryVigilance(){ 
-        const filters =  document.querySelectorAll(".filter-things span");
-        const thingsList = document.querySelector(".things-list"); 
-
-        let busy = false;
-
-        setInterval(async()=>{
-            if(queueCategory.length > 0 && !busy){ 
-                busy = true;               
+ 
     
-                if(queueCategory[0]['link'].getAttribute('class') === 'active'){                        
-                                                 
-                    queueCategory[0]['link'].removeAttribute('class');                                              
-                    this.addImgsCategories();
-                    
-                    const allThings = await this.modelThings.getAll();
-                    const msg = await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object'); 
-                    console.log(`${msg} categorias`);
-
-                    this.toggleCategoryPanel();
-
-                    queueCategory.shift();                    
-                }else{                    
-                    let allThings = {};
-                    const lostThingsFilters = filters.item(0).getAttribute('status');   
-
-                    for (let j = 0; j < queueCategory[0]['allLinks'].length; j++) {                                  
-                        queueCategory[0]['allLinks'][j].removeAttribute('class');                 
-                    }
-                    this.addImgsCategories();
-
-                    if(queueCategory[0]['link'].getAttribute('class') === null){                    
-                        queueCategory[0]['link'].setAttribute('class', 'active');
-                        const img = queueCategory[0]['link'].querySelector('a img');
-                        
-                        if(img.src.includes('headphones')){
-                            img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_white_GRAD0_opsz40.svg`
-                        }else if(img.src.includes('water_bottle')){
-                            img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_white_GRAD0_opsz40.svg`
-                        }else{
-                            img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_white_GRAD0_opsz40.svg`
-                        }     
-                    }
-
-                    if(queueCategory[0]['categoriesId'] == "0" &&  Number.parseInt(lostThingsFilters)){
-                        allThings = await this.modelThings.getAll();
-    
-                    }else if(queueCategory[0]['categoriesId'] == "0" &&  !Number.parseInt(lostThingsFilters)){
-                        allThings = await this.modelThings.getThingsReserved(); 
-                    
-                    }else if(Number.parseInt(lostThingsFilters)){
-                        allThings = await this.modelThings.getThingsByCategoryId(queueCategory[0]['categoriesId']);  
-                        
-                    }else{
-                        allThings = await this.modelThings.getThingsByCategoryIdAndReserved(queueCategory[0]['categoriesId']);  
-                    }
-                    
-                    const thingsList = document.querySelector(".things-list");              
-    
-                    thingsList.innerHTML = "";
-                    
-                    let msg = await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object');                   
-                    console.log(`${msg} categorias`);
-                    
-                    this.toggleCategoryPanel();
-                    queueCategory.shift();  
-                }
-
-                busy = false;                
-                
-            }else{
-                if (busy)                    
-                    console.log('Ocupado');
-                
-                else
-                    console.log('nenhuma requisição na fila');
-                    console.log(queueCategory);
-            }
-        },500);
-
-    }
 
 }
 
@@ -349,7 +236,6 @@ home.appendFooter();
 home.setImgBanner();
 home.createInformationBanner();
 await home.handleThingsByCategories();
-home.categoryVigilance();
 
 HelperSearch.createModalSearch();
 HelperSearch.searchItem();

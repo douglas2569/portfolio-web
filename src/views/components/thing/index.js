@@ -8,12 +8,10 @@ class LayoutThing{
         this.modelCategories = new ModelCategory();               
     }
 
-    async create(container, allThings, link=true, whereView = ''){
+    async create(container, allThings, link=true, whereView = ''){          
 
-        return new Promise(async (resolve, reject)=>{   
-
-            if(allThings.error === '' && allThings.result.length <= 0) resolve('Não tem registro');            
-            // if(!(allThings.error === '')) reject(false); 
+            if(allThings.error === '' && allThings.result.length <= 0) console.log('Não tem registro');           
+            
 
             for (let i = 0; i < allThings.result.length; ++i) {                
 
@@ -59,13 +57,10 @@ class LayoutThing{
                 a.appendChild(figure);
                 
                 container.appendChild(a);
-                                
-                if(i >= allThings.result.length-1){
-                    resolve('Terminou de desenhar');                    
-                }
+               
             }
 
-        });
+        
         
     }
 

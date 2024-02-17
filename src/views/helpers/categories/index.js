@@ -4,7 +4,6 @@ import LayoutThing from '../../components/thing/index.js';
 
 import HelperTabOrder from '../../helpers/taborder/index.js';
 import tabOrderManager from "../../admin/things/manager/taborder/index.js";
-import HelperStatusAllThingsRender from '../../helpers/statusallthingsrender/index.js';
 
 import queueCategory from '../../../../ArrayQueueCategory.js';
 
@@ -162,11 +161,105 @@ class HelperCategories{
                 
                 const categoriesId = allLinks[i].querySelector('a').getAttribute("data-id");   
                 allLinks[i].addEventListener('click', async(e)=>{ 
-                    queueCategory.push({categoriesId, link:allLinks[i], allLinks});                    
+                    queueCategory.push({categoriesId, link:allLinks[i], allLinks});                   
+                    this.vigilance();                   
                 });                
                 
             }        
         
+    }
+
+    //queue data structure
+    static async vigilance(){ 
+        const filters =  document.querySelectorAll(".filter-things span");
+        const thingsList = document.querySelector(".things-list");                  
+
+        if(queueCategory[0]['link'].getAttribute('class') === 'active'){                        
+                                            
+            queueCategory[0]['link'].removeAttribute('class');                                              
+            this.addImgsCategories();
+            document.querySelector(".things-list").innerHTML = "";            
+
+            const allThings = await this.modelThings.getAll();
+            await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object');                 
+
+            this.toggleCategoryPanel();
+
+            queueCategory.shift();                    
+        }else{                    
+            let allThings = {};
+            const lostThingsFilters = filters.item(0).getAttribute('status');   
+
+            for (let j = 0; j < queueCategory[0]['allLinks'].length; j++) {                                  
+                queueCategory[0]['allLinks'][j].removeAttribute('class');                 
+            }
+            this.addImgsCategories();
+
+            if(queueCategory[0]['link'].getAttribute('class') === null){                    
+                queueCategory[0]['link'].setAttribute('class', 'active');
+                const img = queueCategory[0]['link'].querySelector('a img');
+                
+                if(img.src.includes('headphones')){
+                    img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_white_GRAD0_opsz40.svg`
+                }else if(img.src.includes('water_bottle')){
+                    img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_white_GRAD0_opsz40.svg`
+                }else{
+                    img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_white_GRAD0_opsz40.svg`
+                }     
+            }
+
+            if(queueCategory[0]['categoriesId'] == "0" &&  Number.parseInt(lostThingsFilters)){
+                allThings = await this.modelThings.getAll();
+
+            }else if(queueCategory[0]['categoriesId'] == "0" &&  !Number.parseInt(lostThingsFilters)){
+                allThings = await this.modelThings.getThingsReserved(); 
+            
+            }else if(Number.parseInt(lostThingsFilters)){
+                allThings = await this.modelThings.getThingsByCategoryId(queueCategory[0]['categoriesId']);  
+                
+            }else{
+                allThings = await this.modelThings.getThingsByCategoryIdAndReserved(queueCategory[0]['categoriesId']);  
+            }
+            
+            const thingsList = document.querySelector(".things-list");
+            thingsList.innerHTML = "";
+            
+            await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object');                                   
+            
+            this.toggleCategoryPanel();
+            queueCategory.shift();  
+        }
+
+    }
+
+    //queue data structure
+    static addImgsCategories(pImgs=null){
+        let imgs = document.querySelectorAll('.categories-list a img');
+
+        imgs.forEach((img)=>{
+                           
+            if(img.src.includes('headphones')){
+                img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_GRAD0_opsz40.svg`                                
+                
+            }else if(img.src.includes('water_bottle')){
+                img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_GRAD0_opsz40.svg`
+            }else if(img.src.includes('umbrella')){
+                img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_GRAD0_opsz40.svg`
+            }     
+        })
+    }
+
+    //queue data structure
+    static toggleCategoryPanel(){
+        if(document.querySelector('.categories-panel-modal').style.display !== null){
+            document.querySelector('.categories-panel-modal').style.display = 'none';
+            
+            document.querySelector('.header-top-body .search-button').style.display = 'inline-block';
+            document.querySelector('.container-header').style.display = 'flex';
+            document.querySelector('main .container .things-list').style.display = 'flex';
+            document.querySelector('ul.breadcrumb').style.display = 'none';                    
+            
+        }        
     }
 
 
