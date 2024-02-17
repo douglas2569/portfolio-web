@@ -177,8 +177,7 @@ class HelperCategories{
         if(queueCategory[0]['link'].getAttribute('class') === 'active'){                        
                                             
             queueCategory[0]['link'].removeAttribute('class');                                              
-            this.addImgsCategories();
-            document.querySelector(".things-list").innerHTML = "";            
+            this.addImgsCategories();                 
 
             const allThings = await this.modelThings.getAll();
             await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object');                 
@@ -221,8 +220,7 @@ class HelperCategories{
                 allThings = await this.modelThings.getThingsByCategoryIdAndReserved(queueCategory[0]['categoriesId']);  
             }
             
-            const thingsList = document.querySelector(".things-list");
-            thingsList.innerHTML = "";
+            const thingsList = document.querySelector(".things-list");            
             
             await this.layoutThing.create(thingsList, allThings, true, 'users/things/show-object');                                   
             

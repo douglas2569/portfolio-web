@@ -8,7 +8,8 @@ class LayoutThing{
         this.modelCategories = new ModelCategory();               
     }
 
-    async create(container, allThings, link=true, whereView = ''){          
+    async create(container, allThings, link=true, whereView = ''){  
+            document.querySelector(".things-list").innerHTML = "";             
 
             if(allThings.error === '' && allThings.result.length <= 0) console.log('Não tem registro');           
             
