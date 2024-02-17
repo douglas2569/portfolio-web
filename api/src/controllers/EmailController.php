@@ -23,7 +23,7 @@ class EmailController extends Controller{
         $this->mail->Port = 465;
         $this->mail->SMTPAuth = true;
         $this->mail->Username = 'tworeba'; 
-        $this->mail->Password = ''; //i delete the password
+        $this->mail->Password = ''; 
         $this->mail->SMTPSecure = 'ssl';
         $this->mail->setFrom('tworeba@gmail.com');                                                        
                                              
@@ -34,9 +34,10 @@ class EmailController extends Controller{
     }
     
     private function manageEmailList($resultsetEmail, $userEmail){
-        // var_dump($resultsetEmail); exit;
+        // var_dump($resultsetEmail[0]); exit;
+        
         try { 
-            if (count($resultsetEmail[0]) <= 0) {
+            if (count($resultsetEmail) <= 0) {
                 EmailList::insert(['addr'=>$userEmail])->execute();
             }else{ 
                 EmailList::update()->set([
@@ -76,6 +77,7 @@ class EmailController extends Controller{
         $userName = filter_input(INPUT_POST, 'username');
         $subject = filter_input(INPUT_POST, 'subject');        
         $path = filter_input(INPUT_POST, 'path'); 
+        
         
         if($adminEmail && $userEmail && $userName && $id && $local && $path && $validationCode){
 

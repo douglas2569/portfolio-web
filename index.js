@@ -234,21 +234,17 @@ class Home {
     }
 
     //queue data structure
-    addImgsCategories(imgs=null){
-        if(imgs)
-            const imgs = document.querySelectorAll('.categories-list a img');
+    addImgsCategories(pImgs=null){
+           let imgs = document.querySelectorAll('.categories-list a img');
 
         imgs.forEach((img)=>{
                            
             if(img.src.includes('headphones')){
                 img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_GRAD0_opsz40.svg`                                
                 
-            }
-            if(img.src.includes('water_bottle')){
+            }else if(img.src.includes('water_bottle')){
                 img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_GRAD0_opsz40.svg`
-            }
-            
-            if(img.src.includes('umbrella')){
+            }else if(img.src.includes('umbrella')){
                 img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_GRAD0_opsz40.svg`
             }     
         })
@@ -257,16 +253,17 @@ class Home {
     //queue data structure
     categoryVigilance(){ 
         const filters =  document.querySelectorAll(".filter-things span");
+        const thingsList = document.querySelector(".things-list"); 
 
         let busy = false;
 
-        setTimeout(()=>{
-            if(this.queueCategory.length > 0 && !busy){ 
+        setInterval(async()=>{
+            if(queueCategory.length > 0 && !busy){ 
                 busy = true;               
-
-                if(this.queueCategory[0]['link'].getAttribute('class') === 'active'){                        
+    
+                if(queueCategory[0]['link'].getAttribute('class') === 'active'){                        
                                                  
-                    this.queueCategory[0]['link'].removeAttribute('class');                                              
+                    queueCategory[0]['link'].removeAttribute('class');                                              
                     this.addImgsCategories();
                     
                     const allThings = await this.modelThings.getAll();
@@ -275,33 +272,40 @@ class Home {
 
                     this.toggleCategoryPanel();
 
-                    this.queueCategory.shift();                    
+                    queueCategory.shift();                    
                 }else{                    
-                    const allThings = {};
+                    let allThings = {};
                     const lostThingsFilters = filters.item(0).getAttribute('status');   
 
-                    for (let j = 0; j < allLinks.length; j++) {                                  
-                        allLinks[j].removeAttribute('class');                 
+                    for (let j = 0; j < queueCategory[0]['allLinks'].length; j++) {                                  
+                        queueCategory[0]['allLinks'][j].removeAttribute('class');                 
                     }
                     this.addImgsCategories();
 
-                    if(this.queueCategory[0]['link'].getAttribute('class') === null){                    
-                        this.queueCategory[0]['link'].setAttribute('class', 'active');
-                        const img = this.queueCategory[0]['link'].querySelector('a img');
-                        this.addImgsCategories([img]);
+                    if(queueCategory[0]['link'].getAttribute('class') === null){                    
+                        queueCategory[0]['link'].setAttribute('class', 'active');
+                        const img = queueCategory[0]['link'].querySelector('a img');
+                        
+                        if(img.src.includes('headphones')){
+                            img.src = `${config.urlBase}/assets/imgs/icons/headphones_FILL0_wght300_white_GRAD0_opsz40.svg`
+                        }else if(img.src.includes('water_bottle')){
+                            img.src = `${config.urlBase}/assets/imgs/icons/water_bottle_FILL0_wght300_white_GRAD0_opsz40.svg`
+                        }else{
+                            img.src = `${config.urlBase}/assets/imgs/icons/umbrella_FILL0_wght300_white_GRAD0_opsz40.svg`
+                        }     
                     }
 
-                    if(this.queueCategory[0]['categoriesId'] == "0" &&  Number.parseInt(lostThingsFilters)){
+                    if(queueCategory[0]['categoriesId'] == "0" &&  Number.parseInt(lostThingsFilters)){
                         allThings = await this.modelThings.getAll();
     
-                    }else if(this.queueCategory[0]['categoriesId'] == "0" &&  !Number.parseInt(lostThingsFilters)){
+                    }else if(queueCategory[0]['categoriesId'] == "0" &&  !Number.parseInt(lostThingsFilters)){
                         allThings = await this.modelThings.getThingsReserved(); 
                     
                     }else if(Number.parseInt(lostThingsFilters)){
-                        allThings = await this.modelThings.getThingsByCategoryId(categoriesId);  
+                        allThings = await this.modelThings.getThingsByCategoryId(queueCategory[0]['categoriesId']);  
                         
                     }else{
-                        allThings = await this.modelThings.getThingsByCategoryIdAndReserved(categoriesId);  
+                        allThings = await this.modelThings.getThingsByCategoryIdAndReserved(queueCategory[0]['categoriesId']);  
                     }
                     
                     const thingsList = document.querySelector(".things-list");              
@@ -312,7 +316,7 @@ class Home {
                     console.log(`${msg} categorias`);
                     
                     this.toggleCategoryPanel();
-                    this.queueCategory.shift();  
+                    queueCategory.shift();  
                 }
 
                 busy = false;                
@@ -323,8 +327,9 @@ class Home {
                 
                 else
                     console.log('nenhuma requisição na fila');
+                    console.log(queueCategory);
             }
-        },1000);
+        },500);
 
     }
 
