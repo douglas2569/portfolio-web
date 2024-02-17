@@ -1,3 +1,3 @@
 const queueCategory = []
 
-export {queueCategory}
+export default queueCategory
