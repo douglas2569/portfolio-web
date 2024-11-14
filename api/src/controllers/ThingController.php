@@ -3,6 +3,7 @@ namespace src\controllers;
 
 use \core\Controller;
 use \src\models\Things;
+use \src\models\ThingsView;
 use \src\models\Zips;
 use \src\services\AuthService;
 use Exception;
@@ -17,7 +18,45 @@ class ThingController extends Controller {
         parent::__construct();                       
         $this->numberDays = 15768000; // 6 meses        
     }
+    
+    
+    
+    public function index() {
+        
+       $things = ThingsView::select()
+       ->where('reserved_status','0')
+       ->where('returned_status','0')
+       ->orderBy('id','desc')->get();      
+       
+       if(count($things) > 0){
+            
+            foreach($things as $item) {                
+                $diffDates = $this->checkDateDifference($item['date'], $this->numberDays); 
+                
+                if(!$diffDates){ 
+                $this->array['result'][] = [
+                        'id' => $item['id'],                
+                            'image_address' => $item['image_address'],
+                            'description' => $item['description'],
+                            'local' => $item['local'],
+                            'date' => $item['date'],
+                            'reserved_status' => $item['reserved_status'],                                           
+                            'returned_status' => $item['returned_status'],  
+                            'category_id' => $item['category_id'], 
+                            'category_name' => $item['category_name']                            
+                    ];
+                }
+                
+            }
+        }
+        
+        echo json_encode($this->array);
+       
+        exit;
+    }
 
+  
+/*
     public function index() {
         
        $things = Things::select()
@@ -51,11 +90,12 @@ class ThingController extends Controller {
         
     }
 
+*/
     public function get($id){  
                         
         if($id) {            
             
-            $things = Things::select()
+            $things = ThingsView::select()
             ->where('reserved_status','0')
             ->where('returned_status','0')
             ->where('id', $id)
@@ -79,7 +119,8 @@ class ThingController extends Controller {
                                 'date' => $item['date'],
                                 'reserved_status' => $item['reserved_status'],                                           
                                 'returned_status' => $item['returned_status'],                                           
-                                'category_id' => $item['category_id'],                            
+                                'category_id' => $item['category_id'],     
+                                'category_name' => $item['category_name']
                         ];
                      }
                     
@@ -100,7 +141,7 @@ class ThingController extends Controller {
               
         if($categoryId) {
            
-            $things = Things::select()
+            $things = ThingsView::select()
             ->where('reserved_status','0')
             ->where('returned_status','0')
             ->where('category_id', $categoryId)
@@ -121,7 +162,8 @@ class ThingController extends Controller {
                                 'date' => $item['date'],
                                 'reserved_status' => $item['reserved_status'],                                           
                                 'returned_status' => $item['returned_status'],                                           
-                                'category_id' => $item['category_id']                            
+                                'category_id' => $item['category_id'],
+                                'category_name' => $item['category_name']
                         ];
                      }
                     }    
@@ -143,7 +185,7 @@ class ThingController extends Controller {
         if(sizeof($description) <= 0) {echo json_encode($this->array);}            
 
         for ($i=0; $i < sizeof($description) ; $i++) { 
-            $query = Things::select()
+            $query = ThingsView::select()
             ->where('reserved_status','0')
             ->where('returned_status','0')
             ->where('description', 'like','%'.$description[$i].'%')
@@ -169,7 +211,7 @@ class ThingController extends Controller {
               
         if($categoryId) {
            
-            $things = Things::select()
+            $things = ThingsView::select()
             ->where('reserved_status','1')
             ->where('returned_status','0')
             ->where('category_id', $categoryId)
@@ -190,7 +232,9 @@ class ThingController extends Controller {
                                 'date' => $item['date'],
                                 'reserved_status' => $item['reserved_status'],                                           
                                 'returned_status' => $item['returned_status'],                                           
-                                'category_id' => $item['category_id']                            
+                                'category_id' => $item['category_id'],
+                                'category_name' => $item['category_name']
+                                
                         ];
                      }
                 }    
@@ -209,7 +253,7 @@ class ThingController extends Controller {
 
     public function getAllReserved() {
         
-        $things = Things::select()->where('reserved_status','1')->where('returned_status','0')->orderBy('id','desc')->get();                        
+        $things = ThingsView::select()->where('reserved_status','1')->where('returned_status','0')->orderBy('id','desc')->get();                        
         
         if(count($things) > 0){
             
@@ -225,7 +269,8 @@ class ThingController extends Controller {
                             'date' => $item['date'],
                             'reserved_status' => $item['reserved_status'],                                           
                             'returned_status' => $item['returned_status'],                                           
-                            'category_id' => $item['category_id']                            
+                            'category_id' => $item['category_id'],
+                            'category_name' => $item['category_name']                            
                     ];
                  }
             }   
@@ -241,7 +286,7 @@ class ThingController extends Controller {
         
         if($id) {            
             
-            $things = Things::select()
+            $things = ThingsView::select()
             ->where('reserved_status','1')
             ->where('returned_status','0')
             ->where('id', $id)
@@ -265,7 +310,8 @@ class ThingController extends Controller {
                                 'date' => $item['date'],
                                 'reserved_status' => $item['reserved_status'],                                           
                                 'returned_status' => $item['returned_status'],                                           
-                                'category_id' => $item['category_id']                            
+                                'category_id' => $item['category_id'],
+                                'category_name' => $item['category_name']                            
                         ];
                      }
                     
@@ -284,7 +330,7 @@ class ThingController extends Controller {
 
     public function getAllReturned() {
         
-        $things = Things::select()->where('returned_status','1')->orderBy('id','desc')->get();                
+        $things = ThingsView::select()->where('returned_status','1')->orderBy('id','desc')->get();                
         
         if(count($things) > 0){
             
@@ -300,7 +346,8 @@ class ThingController extends Controller {
                             'date' => $item['date'],
                             'reserved_status' => $item['reserved_status'],                                           
                             'returned_status' => $item['returned_status'],                                           
-                            'category_id' => $item['category_id']                            
+                            'category_id' => $item['category_id'],
+                            'category_name' => $item['category_name']                            
                     ];
                  }
             }    
@@ -314,7 +361,7 @@ class ThingController extends Controller {
 
     public function getAllDiscard() {
         
-        $things = Things::select()->orderBy('id','desc')->get();  
+        $things = ThingsView::select()->orderBy('id','desc')->get();  
         
         if(count($things) > 0){
             
@@ -330,7 +377,9 @@ class ThingController extends Controller {
                             'date' => $item['date'],
                             'reserved_status' => $item['reserved_status'],                                           
                             'returned_status' => $item['returned_status'],                                           
-                            'category_id' => $item['category_id']                            
+                            'category_id' => $item['category_id'],
+                            'category_name' => $item['category_name']
+                            
                     ];
                  }
             }    
@@ -550,7 +599,7 @@ class ThingController extends Controller {
 
         
         if($data['id'] && $data['image_address'] && $data['category_id']) {   
-            $things = Things::select()->where('id', $data['id'])->execute();            
+            $things = ThingsView::select()->where('id', $data['id'])->execute();            
 
             if(count($things) > 0){
 
@@ -572,6 +621,7 @@ class ThingController extends Controller {
                         'returned_status'=>$data['returned_status'],
                         'reserved_status'=>$data['reserved_status'],
                         'category_id'=>$data['category_id'],
+                        'category_name' => $item['category_name']
                 ];
 
             }else{

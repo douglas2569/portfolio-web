@@ -23,7 +23,7 @@ class EmailController extends Controller{
         $this->mail->Port = 465;
         $this->mail->SMTPAuth = true;
         $this->mail->Username = 'tworeba'; 
-        $this->mail->Password = ''; 
+        $this->mail->Password = 'ddfaajjaafnkfkwg'; 
         $this->mail->SMTPSecure = 'ssl';
         $this->mail->setFrom('tworeba@gmail.com');                                                        
                                              

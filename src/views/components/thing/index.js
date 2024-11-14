@@ -8,9 +8,8 @@ class LayoutThing{
         this.modelCategories = new ModelCategory();               
     }
 
-    async create(container, allThings, link=true, whereView = ''){  
-            document.querySelector(".things-list").innerHTML = "";             
-
+    async create(container, allThings, link=true, whereView = ''){    
+            document.querySelector(".things-list").innerHTML = "";   
             if(allThings.error === '' && allThings.result.length <= 0) console.log('Não tem registro');           
             
 
@@ -39,8 +38,10 @@ class LayoutThing{
                 local.textContent = allThings.result[i].local;  
                 description.textContent = allThings.result[i].description;  
                 
-                let categoryName = await this.modelCategories.get(allThings.result[i].category_id) ?? null;
-                category.appendChild(document.createTextNode(`${categoryName.result.name}`));  
+                //let categoryName = await this.modelCategories.get(allThings.result[i].category_id) ?? null;
+                //category.appendChild(document.createTextNode(`${categoryName.result.name}`));  
+                
+                category.appendChild(document.createTextNode(`${allThings.result[i].category_name}`));
                 
                 header.setAttribute('class','thing-header');  
                 header.appendChild(thingId);  
