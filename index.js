@@ -109,6 +109,9 @@ class Home {
                     
                     thingsList.innerHTML = '';
                     let msg = await this.layoutThing.create(thingsList, allThings, true, path);
+                    if(allThings.result.length <= 0){
+                        thingsList.innerHTML='Nenhum registro encontrado'
+                   }
                     
                     console.log(`${msg} os objetos por filtros`);                    
                 }catch(erro){
